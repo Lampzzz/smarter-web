@@ -4,6 +4,8 @@ interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: React.ReactNode;
   error?: string;
   label?: string;
+  value?: string; // Added value prop to track input value
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Added onChange prop to handle changes
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -12,6 +14,8 @@ const FormField: React.FC<FormFieldProps> = ({
   icon,
   error,
   label,
+  value,
+  onChange, // Destructure the onChange handler
   ...props
 }) => {
   return (
@@ -21,6 +25,8 @@ const FormField: React.FC<FormFieldProps> = ({
       <input
         type={type}
         placeholder={placeholder}
+        value={value} // Attach the value prop
+        onChange={onChange} // Attach the onChange handler
         className="flex-grow p-3 outline-none"
         {...props}
       />
