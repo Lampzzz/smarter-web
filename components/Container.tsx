@@ -1,6 +1,6 @@
 const Container = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="w-screen h-screen flex justify-center items-center bg-white-100 ">
+    <div className="w-screen h-screen grid justify-center items-center bg-[#F6F6F6] ">
       {children}
     </div>
   );

@@ -3,22 +3,22 @@ import Container from "@/components/Container";
 import FormField from "@/components/FormField";
 import Seperator from "@/components/Seperator";
 import WelcomeSection from "@/components/WelcomeSection";
+import { icons } from "@/constant";
 
 const SignIn = () => {
   return (
     <Container>
       <div className="flex justify-center items-center flex-row">
-        <div className="w-1/2 bg-gray p-5">
+        <div className="w-1/2 bg-gray p-10 border rounded-2xl bg-[#FCFCFC]">
           <div className="mb-4">
             <h1 className="font-bold text-3xl">Sign In</h1>
-            <p>Please enter your details to sign in</p>
           </div>
-          <GoogleButton />
-          <Seperator />
+          <GoogleButton label="Sign In with Google" />
+          <Seperator label="or Sign In with" />
           <form>
-            <FormField placeholder="Email" />
-            <FormField placeholder="Password" />
-            <Button label="Sign Up" />
+            <FormField placeholder="Email" icon={icons.email.src} />
+            <FormField placeholder="Password" icon={icons.lock.src} />
+            <Button label="Sign In" />
           </form>
           <div className="text-center mt-3">
             <p>

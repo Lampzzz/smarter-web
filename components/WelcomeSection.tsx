@@ -1,11 +1,13 @@
-import logo from "@/assets/images/logo.png";
-
-import React from "react";
+import { images } from "@/constant";
 
 const WelcomeSection = () => {
   return (
-    <div className="flex flex-col items-center justify-center text-center p-8">
-      <img src={logo} alt="SmarTer" className="w-24 h-24 mb-4" />
+    <div className="w-1/2 flex flex-col items-center justify-center text-center p-8">
+      <img
+        src={images.logo.src as string}
+        alt="SmarTer"
+        className="w-40 h-40 mb-4"
+      />
       <h2 className="text-2xl font-bold mb-2">
         Welcome to <span className="text-orange-500">SmarTer</span>
       </h2>

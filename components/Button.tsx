@@ -20,15 +20,15 @@ const Button = ({ label, onClick, disabled }: ButtonProps) => {
   );
 };
 
-export const GoogleButton = () => {
+export const GoogleButton = ({ label }) => {
   return (
-    <button className="flex items-center justify-center w-full mb-4 py-2 border rounded-lg bg-gray-100 hover:bg-gray-200">
+    <button className="flex items-center justify-center w-full mb-4 p-3 border rounded-full bg-gray-100 hover:bg-gray-200">
       <img
-        src="assets/images/google-icon.svg"
+        src={images.googleIcon.src as string}
         alt="Google"
         className="w-6 h-6 mr-2"
       />
-      Sign in with Google
+      {label}
     </button>
   );
 };

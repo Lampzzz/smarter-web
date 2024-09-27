@@ -1,11 +1,9 @@
-import React from "react";
-
 interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   placeholder: string;
-  icon?: React.ReactNode; // More specific type for the icon
+  icon?: React.ReactNode;
   error?: string;
-  label?: string; // Optional label prop for accessibility
+  label?: string;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -17,21 +15,15 @@ const FormField: React.FC<FormFieldProps> = ({
   ...props
 }) => {
   return (
-    <div className="mb-4">
-      {label && (
-        <label className="block mb-1 text-sm font-medium">{label}</label>
-      )}
-      <div className="flex items-center border rounded-lg">
-        {/* {icon && <span className="p-2">{icon}</span>}{" "} */}
-        {/* Optional icon rendering */}
-        <input
-          type={type}
-          placeholder={placeholder}
-          className="flex-grow p-3 outline-none"
-          {...props}
-        />
-      </div>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
+    <div className="flex items-center mb-4 w-full rounded-full px-3 border bg-[#FCFCFC]">
+      <img src={icon as string} className="w-6 h-6 mr-2 bg-[#FCFCFC]" />
+
+      <input
+        type={type}
+        placeholder={placeholder}
+        className="flex-grow p-3 outline-none"
+        {...props}
+      />
     </div>
   );
 };
