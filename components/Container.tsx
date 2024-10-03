@@ -1,9 +1,11 @@
-const Container = ({ children }: { children: React.ReactNode }) => {
+export const CenterContainer = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   return (
-    <div className="w-screen h-screen grid justify-center items-center bg-[#F6F6F6] ">
+    <div className="flex w-full min-h-screen justify-center items-center p-8">
       {children}
     </div>
   );
 };
-
-export default Container;

@@ -1,35 +1,25 @@
-interface FormFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  type?: string;
-  placeholder: string;
-  icon?: React.ReactNode;
-  error?: string;
-  label?: string;
-  value?: string; // Added value prop to track input value
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void; // Added onChange prop to handle changes
-}
+import { FormFieldProps } from "@/types";
 
 const FormField: React.FC<FormFieldProps> = ({
-  type = "text",
+  type,
   placeholder,
-  icon,
+  name,
+  register,
   error,
-  label,
-  value,
-  onChange, // Destructure the onChange handler
-  ...props
 }) => {
   return (
     <div className="flex items-center mb-4 w-full rounded-full px-3 border bg-[#FCFCFC]">
-      <img src={icon as string} className="w-6 h-6 mr-2 bg-[#FCFCFC]" />
-
       <input
         type={type}
         placeholder={placeholder}
-        value={value} // Attach the value prop
-        onChange={onChange} // Attach the onChange handler
+        {...register(name)}
         className="flex-grow p-3 outline-none"
-        {...props}
       />
+      {error && (
+        <span className="text-red-500 text-sm">
+          {error.message?.toString()}
+        </span>
+      )}
     </div>
   );
 };

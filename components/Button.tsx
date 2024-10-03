@@ -1,4 +1,4 @@
-import { images } from "@/constant";
+import { images } from "@/constants/images";
 import React from "react";
 
 interface ButtonProps {
@@ -6,6 +6,13 @@ interface ButtonProps {
   onClick?: () => void;
   disabled?: boolean;
 }
+
+const buttonVariant = (variant: string) => {
+  switch (variant) {
+    default:
+      return "bg-[#F58509]";
+  }
+};
 
 const Button = ({ label, onClick, disabled }: ButtonProps) => {
   return (
