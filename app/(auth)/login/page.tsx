@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
+import GoogleButton from "@/sections/auth/GoogleButton";
+import { fetchAPI } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import GoogleButton from "@/sections/auth/GoogleButton";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
@@ -29,13 +31,24 @@ type LoginFormValue = z.infer<typeof formSchema>;
 
 const Page = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const form = useForm<LoginFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "", password: "" },
   });
 
   const onSubmit = async (data: LoginFormValue) => {
-    router.push("/dashboard");
+    setLoading(true);
+
+    try {
+      await fetchAPI("/api/auth/login", "POST", data);
+      router.push("/dashboard");
+      form.reset();
+    } catch (error: any) {
+      throw new Error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,6 +77,7 @@ const Page = () => {
                       <Input
                         type="email"
                         placeholder="Enter your email"
+                        error={form.formState.errors.email}
                         {...field}
                       />
                     </FormControl>
@@ -81,6 +95,7 @@ const Page = () => {
                       <Input
                         type="password"
                         placeholder="Enter your password"
+                        error={form.formState.errors.password}
                         {...field}
                       />
                     </FormControl>
@@ -89,7 +104,11 @@ const Page = () => {
                 )}
               />
 
-              <Button className="ml-auto w-full" type="submit">
+              <Button
+                className="ml-auto w-full"
+                type="submit"
+                disabled={loading}
+              >
                 Sign In
               </Button>
             </form>

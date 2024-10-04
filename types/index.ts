@@ -33,3 +33,26 @@ export interface FormFieldProps {
 }
 
 export type ValidFieldNames = "name" | "email" | "password";
+
+export interface Shelter {
+  id: string;
+  name: string;
+  location: string;
+  type: "Permanent" | "Temporary";
+  capacity: number;
+  status: "Available" | "Occupied" | "Full" | "Reserved" | "Maintenance";
+}
+
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  middleName?: string;
+  email: string;
+  phoneNumber: string;
+  gender: "Male" | "Female";
+  dateOfBirth: string;
+  age: number;
+  address: string;
+  picture: string;
+}

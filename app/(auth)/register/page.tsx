@@ -2,10 +2,13 @@
 
 import * as z from "zod";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
+import GoogleButton from "@/sections/auth/GoogleButton";
+import { fetchAPI } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,7 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import GoogleButton from "@/sections/auth/GoogleButton";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }).min(2, {
@@ -35,21 +37,35 @@ const formSchema = z.object({
       { message: "Invalid Password Format." }
     ),
 });
+
 type RegisterFormValue = z.infer<typeof formSchema>;
 
 const Page = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<RegisterFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { name: "", email: "", password: "" },
   });
 
   const onSubmit = async (data: RegisterFormValue) => {
-    router.push("/dashboard");
+    setLoading(true);
+
+    try {
+      const response = await fetchAPI("/api/auth/register", "POST", data);
+      console.log(response);
+
+      form.reset();
+    } catch (error: any) {
+      throw new Error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
+    <div className="relative overflow-y-auto h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
       <div className="flex h-full items-center p-4 lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px] ">
           <div className="flex flex-col space-y-2 text-center">
@@ -77,6 +93,7 @@ const Page = () => {
                         <Input
                           type="name"
                           placeholder="Enter your name"
+                          error={form.formState.errors.name}
                           {...field}
                         />
                       </FormControl>
@@ -94,6 +111,7 @@ const Page = () => {
                         <Input
                           type="email"
                           placeholder="Enter your email"
+                          error={form.formState.errors.email}
                           {...field}
                         />
                       </FormControl>
@@ -111,6 +129,7 @@ const Page = () => {
                         <Input
                           type="password"
                           placeholder="Enter your password"
+                          error={form.formState.errors.password}
                           {...field}
                         />
                       </FormControl>
@@ -119,8 +138,12 @@ const Page = () => {
                   )}
                 />
 
-                <Button className="ml-auto w-full" type="submit">
-                  Sign In
+                <Button
+                  className="ml-auto w-full"
+                  type="submit"
+                  disabled={loading}
+                >
+                  Create an account
                 </Button>
               </form>
             </Form>
