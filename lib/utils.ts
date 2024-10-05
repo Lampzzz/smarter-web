@@ -5,29 +5,31 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export async function fetchAPI(
-  url: string,
-  method: "GET" | "POST" | "PUT" | "DELETE",
-  body: any
-) {
-  try {
-    const response = await fetch(url, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: method !== "GET" ? JSON.stringify(body) : null,
-    });
+export function fireBaseError(error: string) {
+  const errors: Record<string, { message: string }> = {};
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "An error occurred while fetching data.");
-    }
-
-    return data;
-  } catch (error) {
-    console.error("Something went wrong:", error);
-    throw error;
+  switch (error) {
+    case "auth/invalid-email":
+      errors.email = { message: "Invalid email" };
+      break;
+    case "auth/invalid-credential":
+      errors.both = { message: "Wrong email or password" };
+      break;
+    case "auth/user-disabled":
+      errors.email = { message: "User disabled" };
+      break;
+    case "auth/user-not-found":
+      errors.email = { message: "User not found" };
+      break;
+    case "auth/wrong-password":
+      errors.password = { message: "Wrong password" };
+      break;
+    case "auth/email-already-in-use":
+      errors.email = { message: "Email already taken" };
+      break;
+    default:
+      errors.general = { message: error };
   }
+
+  return errors;
 }

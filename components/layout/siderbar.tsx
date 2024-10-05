@@ -1,6 +1,6 @@
 "use client";
 
-import { DashboardNav } from "@/components/DashboardNav";
+import { DashboardNav } from "@/components/dashboard-nav";
 import { navItems } from "@/constants/data";
 import { images } from "@/constants/images";
 import { useSidebar } from "@/hooks/useSidebar";

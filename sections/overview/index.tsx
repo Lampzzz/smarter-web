@@ -1,7 +1,6 @@
-import PageContainer from "@/components/layout/PageContainer";
-import React from "react";
+import PageContainer from "@/components/layout/page-container";
 
-export default function overview() {
+export default function Overview() {
   return (
     <PageContainer scrollable={true}>
       <div className="space-y-2">

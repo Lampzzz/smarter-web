@@ -5,20 +5,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 
-import GoogleButton from "@/sections/auth/GoogleButton";
-import { fetchAPI } from "@/lib/utils";
+import GoogleButton from "@/components/google-button";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FirebaseErrors, FieldErrorMessage } from "@/types";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }).min(2, {
@@ -40,25 +41,53 @@ const formSchema = z.object({
 
 type RegisterFormValue = z.infer<typeof formSchema>;
 
-const Page = () => {
+export default function Register() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const form = useForm<RegisterFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", password: "" },
+    defaultValues: {
+      name: "Dummy",
+      email: "dummy@gmail.com",
+      password: "Dummy11!",
+    },
   });
+
+  const handleFetchErrors = async (response: Response) => {
+    const errorData = await response.json();
+    const errors = errorData as FirebaseErrors;
+
+    if (errors) {
+      Object.entries(errors).forEach(([field, error]) => {
+        const { message } = error as FieldErrorMessage;
+        form.setError(field as "name" | "email" | "password", {
+          type: "manual",
+          message,
+        });
+      });
+    } else {
+      console.error("General error:", errorData.error || "Unknown error");
+    }
+  };
 
   const onSubmit = async (data: RegisterFormValue) => {
     setLoading(true);
 
     try {
-      const response = await fetchAPI("/api/auth/register", "POST", data);
-      console.log(response);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      form.reset();
-    } catch (error: any) {
-      throw new Error(error);
+      if (!response.ok) {
+        await handleFetchErrors(response);
+      }
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Error:", error);
     } finally {
       setLoading(false);
     }
@@ -133,6 +162,11 @@ const Page = () => {
                           {...field}
                         />
                       </FormControl>
+                      {/* <FormDescription>
+                        The password must be 8-20 characters long and include at
+                        least one uppercase letter, lowercase letter, number,
+                        and special character.
+                      </FormDescription> */}
                       <FormMessage />
                     </FormItem>
                   )}
@@ -166,7 +200,7 @@ const Page = () => {
               </span>
             </div>
           </div>
-          <GoogleButton label="Sign in with Google" />
+          <GoogleButton label="Sign up with Google" />
           <p className="px-8 text-center text-sm text-muted-foreground">
             By clicking continue, you agree to our{" "}
             <Link
@@ -191,6 +225,4 @@ const Page = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}

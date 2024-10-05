@@ -2,54 +2,31 @@ import { addDoc, collection } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
 
 import { auth, db } from "./config";
+import { fireBaseError } from "@/lib/utils";
 
-interface AuthProps {
-  email: string;
-  password: string;
-}
-
-interface RegisterProps {
-  email: string;
-  password: string;
-  name: string;
-}
-
-export const login = async ({ email, password }: AuthProps) => {
+export const login = async (email: string, password: string) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    console.log("Logged in:", userCredential.user);
+    await signInWithEmailAndPassword(auth, email, password);
+    return { success: true };
   } catch (error: any) {
-    throw new Error(error);
+    const firebaseError = fireBaseError(error.code);
+
+    if (Object.keys(firebaseError).length) {
+      return { error: firebaseError };
+    }
+
+    return { error: error.message };
   }
 };
 
-export const register = async ({ email, password, name }: RegisterProps) => {
+export const logout = async () => {
   try {
-    // Register user with email and password
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const user = userCredential.user;
-
-    // Create a Firestore document in 'users' collection with user info
-    await addDoc(collection(db, "users"), {
-      auth_id: user.uid,
-      email: user.email,
-      name: name,
-    });
-
-    console.log("User registered and document created in Firestore:", user.uid);
+    await signOut(auth);
   } catch (error: any) {
-    throw new Error(error.message); // Handle and throw error
+    return { error: error.message };
   }
 };

@@ -56,3 +56,14 @@ export interface User {
   address: string;
   picture: string;
 }
+
+export interface FieldErrorMessage {
+  message: string;
+}
+
+export interface FirebaseErrors {
+  name?: FieldErrorMessage;
+  email?: FieldErrorMessage;
+  password?: FieldErrorMessage;
+  general?: FieldErrorMessage;
+}

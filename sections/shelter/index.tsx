@@ -1,22 +1,21 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-
-import { Breadcrumbs } from "@/components/BreadCrumb";
-import { Heading } from "@/components/Heading";
-import PageContainer from "@/components/layout/PageContainer";
+import { Breadcrumbs } from "@/components/breadcrumb";
+import { Heading } from "@/components/heading";
+import PageContainer from "@/components/layout/page-container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
-import ShelterTable from "../shelter-table";
 import { fakeShelters } from "@/constants/mock-api";
+import ShelterTable from "./table";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
   { title: "Shelter", link: "/dashboard/shelter" },
 ];
 
-const ShelterListingPage = () => {
+export default function Shelter() {
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
   const status = searchParamsCache.get("status");
@@ -48,6 +47,4 @@ const ShelterListingPage = () => {
       </div>
     </PageContainer>
   );
-};
-
-export default ShelterListingPage;
+}

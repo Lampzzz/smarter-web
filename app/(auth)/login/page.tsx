@@ -2,12 +2,13 @@
 
 import * as z from "zod";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
-import GoogleButton from "@/sections/auth/GoogleButton";
-import { fetchAPI } from "@/lib/utils";
+import GoogleButton from "@/components/google-button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,7 +19,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState } from "react";
+import { X } from "lucide-react";
+import { login } from "@/firebase/auth";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
@@ -29,20 +31,28 @@ const formSchema = z.object({
 
 type LoginFormValue = z.infer<typeof formSchema>;
 
-const Page = () => {
+export default function Login() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const form = useForm<LoginFormValue>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "dummy@gmail.com", password: "Dummy11!" },
   });
 
   const onSubmit = async (data: LoginFormValue) => {
+    setError(null);
     setLoading(true);
 
     try {
-      await fetchAPI("/api/auth/login", "POST", data);
-      router.push("/dashboard");
+      const response = await login(data.email, data.password);
+
+      if (response.success) {
+        router.push("/dashboard");
+      } else {
+        setError(response.error.both.message);
+      }
+
       form.reset();
     } catch (error: any) {
       throw new Error(error);
@@ -61,7 +71,19 @@ const Page = () => {
               Enter your information to login
             </p>
           </div>
-
+          {error && (
+            <Alert className="flex items-center justify-between bg-destructive">
+              <AlertDescription>{error}</AlertDescription>
+              <Button
+                variant="link"
+                onClick={() => {
+                  setError(null);
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </Alert>
+          )}
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -139,6 +161,4 @@ const Page = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}
