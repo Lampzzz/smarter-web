@@ -15,21 +15,23 @@ const useAuthStore = create<UserStoreState>((set, get) => ({
   isLoading: true,
 
   initializeAuthListener: () => {
+    set({ isLoading: true });
+
     const unsubscribe = onAuthStateChanged(auth, (userAuth) => {
       if (userAuth) {
         set({
           isAuthenticated: true,
           currentUser: userAuth,
+          isLoading: false,
         });
       } else {
         set({
           isAuthenticated: false,
           currentUser: null,
+          isLoading: false,
         });
       }
     });
-
-    set({ isLoading: false });
 
     return unsubscribe;
   },

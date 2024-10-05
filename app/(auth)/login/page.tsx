@@ -6,7 +6,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-
+import { X } from "lucide-react";
+import { login } from "@/firebase/auth";
 import GoogleButton from "@/components/google-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -19,8 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { X } from "lucide-react";
-import { login } from "@/firebase/auth";
 
 const formSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email({
@@ -33,7 +32,6 @@ type LoginFormValue = z.infer<typeof formSchema>;
 
 export default function Login() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const form = useForm<LoginFormValue>({
     resolver: zodResolver(formSchema),
@@ -42,7 +40,6 @@ export default function Login() {
 
   const onSubmit = async (data: LoginFormValue) => {
     setError(null);
-    setLoading(true);
 
     try {
       const response = await login(data.email, data.password);
@@ -56,8 +53,6 @@ export default function Login() {
       form.reset();
     } catch (error: any) {
       throw new Error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -129,7 +124,7 @@ export default function Login() {
               <Button
                 className="ml-auto w-full"
                 type="submit"
-                disabled={loading}
+                disabled={form.formState.isSubmitting}
               >
                 Sign In
               </Button>
