@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { FirebaseErrors, FieldErrorMessage } from "@/types";
 import { useRouter } from "next/navigation";
+import { register } from "@/firebase/auth";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }).min(2, {
@@ -75,17 +76,14 @@ export default function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      const response = await register(data);
 
-      if (!response.ok) {
-        await handleFetchErrors(response);
+      if (response.success) {
+        router.push("/dashboard");
+      } else {
+        // handleFetchErrors(response.error);
+        console.log(response.error);
       }
-
-      router.push("/dashboard");
     } catch (error) {
       console.error("Error:", error);
     } finally {

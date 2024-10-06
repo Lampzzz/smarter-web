@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-
+import { User as FirebaseUser } from "firebase/auth";
 import {
   FieldError,
   FieldErrorsImpl,
@@ -38,9 +38,9 @@ export interface Shelter {
   id: string;
   name: string;
   location: string;
-  type: "Permanent" | "Temporary";
+  type: "permanent" | "temporary";
   capacity: number;
-  status: "Available" | "Occupied" | "Full" | "Reserved" | "Maintenance";
+  status: "available" | "used" | "maintenance";
 }
 
 export interface User {
@@ -66,4 +66,24 @@ export interface FirebaseErrors {
   email?: FieldErrorMessage;
   password?: FieldErrorMessage;
   general?: FieldErrorMessage;
+}
+
+export interface UserState {
+  currentUser: FirebaseUser | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  initializeAuthListener: () => () => void;
+}
+
+export interface newAdminProps {
+  name: string;
+  email: string;
+  authId: string;
+}
+
+export interface FilterTypes {
+  page?: number;
+  limit?: number;
+  status?: string;
+  search?: string;
 }

@@ -1,20 +1,8 @@
 "use client";
 
 import PageContainer from "@/components/layout/page-container";
-import useAuthStore from "@/store/authStore";
-import { useEffect } from "react";
 
 export default function Overview() {
-  const { isAuthenticated, isLoading, currentUser } = useAuthStore();
-
-  console.log(currentUser);
-
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("isAuthenticated:", isAuthenticated);
-    }
-  }, [isLoading, isAuthenticated]);
-
   return (
     <PageContainer scrollable={true}>
       <div className="space-y-2">

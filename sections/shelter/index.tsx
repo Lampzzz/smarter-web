@@ -7,7 +7,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
-import { fakeShelters } from "@/constants/mock-api";
 import ShelterTable from "./table";
 
 const breadcrumbItems = [
@@ -43,7 +42,7 @@ export default function Shelter() {
           </Link>
         </div>
         <Separator />
-        <ShelterTable data={fakeShelters} totalData={fakeShelters.length} />
+        <ShelterTable filters={filters} />
       </div>
     </PageContainer>
   );

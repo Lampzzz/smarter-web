@@ -1,23 +1,29 @@
 "use client";
 
+import { useEffect } from "react";
+import useShelterStore from "@/store/shelterStore";
 import { DataTable } from "@/components/ui/table/data-table";
 import { columns } from "./columns";
-import { Shelter } from "@/types";
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
+import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
+import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
 import {
   useShelterTableFilters,
   STATUS_OPTIONS,
 } from "./use-shelter-table-filters";
-import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
-import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
+import { FilterTypes } from "@/types";
 
-const ShelterTable = ({
-  data,
-  totalData,
-}: {
-  data: Shelter[];
-  totalData: number;
-}) => {
+const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
+  const { filteredShelters, fetchShelters, filterShelters } = useShelterStore();
+
+  useEffect(() => {
+    fetchShelters();
+  }, [fetchShelters]);
+
+  useEffect(() => {
+    filterShelters(filters);
+  }, [filters, filterShelters]);
+
   const {
     statusFilter,
     setStatusFilter,
@@ -44,12 +50,16 @@ const ShelterTable = ({
           setFilterValue={setStatusFilter}
           filterValue={statusFilter}
         />
-        {/* <DataTableResetFilter
+        <DataTableResetFilter
           isFilterActive={isAnyFilterActive}
           onReset={resetFilters}
-        /> */}
+        />
       </div>
-      <DataTable columns={columns} data={data} totalItems={totalData} />
+      <DataTable
+        columns={columns}
+        data={filteredShelters}
+        totalItems={filteredShelters.length}
+      />
     </div>
   );
 };

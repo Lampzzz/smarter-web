@@ -5,11 +5,9 @@ import { useQueryState } from "nuqs";
 import { useCallback, useMemo } from "react";
 
 export const STATUS_OPTIONS = [
-  { value: "Occupied", label: "Occupied" },
-  { value: "Available", label: "Available" },
-  { value: "Full", label: "Full" },
-  { value: "Maintenance", label: "Maintenance" },
-  { value: "Reserved", label: "Reserved" },
+  { value: "used", label: "Used" },
+  { value: "available", label: "Available" },
+  { value: "maintenance", label: "Maintenance" },
 ];
 
 export function useShelterTableFilters() {

@@ -1,15 +1,9 @@
 import { auth } from "@/firebase/config";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { UserState } from "@/types";
+import { onAuthStateChanged } from "firebase/auth";
 import { create } from "zustand";
 
-interface UserStoreState {
-  currentUser: FirebaseUser | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  initializeAuthListener: () => () => void;
-}
-
-const useAuthStore = create<UserStoreState>((set, get) => ({
+const useAuthStore = create<UserState>((set, get) => ({
   currentUser: null,
   isAuthenticated: false,
   isLoading: true,
