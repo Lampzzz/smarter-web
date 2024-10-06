@@ -1,6 +1,7 @@
 "use client";
 
 import PageContainer from "@/components/layout/page-container";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Overview() {
   return (

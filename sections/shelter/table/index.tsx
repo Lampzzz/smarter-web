@@ -14,7 +14,8 @@ import {
 import { FilterTypes } from "@/types";
 
 const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
-  const { filteredShelters, fetchShelters, filterShelters } = useShelterStore();
+  const { filteredShelters, fetchShelters, filterShelters, isLoading } =
+    useShelterStore();
 
   useEffect(() => {
     fetchShelters();
@@ -35,7 +36,7 @@ const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
   } = useShelterTableFilters();
 
   return (
-    <div className="space-y-4 ">
+    <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-4">
         <DataTableSearch
           searchKey="name"
@@ -59,6 +60,7 @@ const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
         columns={columns}
         data={filteredShelters}
         totalItems={filteredShelters.length}
+        isLoading={isLoading}
       />
     </div>
   );

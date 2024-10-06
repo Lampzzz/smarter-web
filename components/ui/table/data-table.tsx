@@ -31,12 +31,14 @@ import {
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
+import { Skeleton } from "../skeleton";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalItems: number;
   pageSizeOptions?: number[];
+  isLoading: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -44,6 +46,7 @@ export function DataTable<TData, TValue>({
   data,
   totalItems,
   pageSizeOptions = [10, 20, 30, 40, 50],
+  isLoading = false,
 }: DataTableProps<TData, TValue>) {
   const [currentPage, setCurrentPage] = useQueryState(
     "page",
@@ -77,13 +80,13 @@ export function DataTable<TData, TValue>({
     setPageSize(pagination.pageSize);
   };
 
-  const paginatedData = data.slice(
-    paginationState.pageIndex * paginationState.pageSize,
-    (paginationState.pageIndex + 1) * paginationState.pageSize
-  );
+  // const paginatedData = data.slice(
+  //   paginationState.pageIndex * paginationState.pageSize,
+  //   (paginationState.pageIndex + 1) * paginationState.pageSize
+  // );
 
   const table = useReactTable({
-    data: paginatedData,
+    data,
     columns,
     pageCount: pageCount,
     state: {
@@ -117,7 +120,19 @@ export function DataTable<TData, TValue>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              Array.from({ length: paginationState.pageSize }).map(
+                (_, index) => (
+                  <TableRow key={`skeleton-${index}`}>
+                    {columns.map((column) => (
+                      <TableCell key={column.id}>
+                        <Skeleton className="h-6 w-3/5" />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                )
+              )
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
