@@ -1,34 +1,34 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumb";
-import { Heading } from "@/components/heading";
 import PageContainer from "@/components/layout/page-container";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Heading } from "@/components/heading";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
-import ShelterTable from "./table";
-import { getAllShelters } from "@/firebase/firestore";
+import { cn } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import UserTable from "./table";
+import { getAllUsers } from "@/firebase/firestore";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Shelter", link: "/dashboard/shelter" },
+  { title: "Users", link: "/dashboard/users" },
 ];
 
-export default async function Shelter() {
+export default async function UsersListingPage() {
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
-  const status = searchParamsCache.get("status");
   const pageLimit = searchParamsCache.get("limit");
+  const gender = searchParamsCache.get("gender");
 
   const filters = {
     page,
     limit: pageLimit,
     ...(search && { search }),
-    ...(status && { status: status }),
+    ...(gender && { genders: gender }),
   };
 
-  const shelters = await getAllShelters();
+  const users = await getAllUsers();
 
   return (
     <PageContainer>
@@ -36,19 +36,18 @@ export default async function Shelter() {
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">
           <Heading
-            title={`Shelter (${shelters?.length})`}
-            description="Manage shelter"
+            title={`Users (${users?.length})`}
+            description="Manage Users"
           />
-
           <Link
-            href={"/dashboard/employee/new"}
+            href={"/dashboard/users/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
           </Link>
         </div>
         <Separator />
-        <ShelterTable filters={filters} />
+        <UserTable filters={filters} />
       </div>
     </PageContainer>
   );

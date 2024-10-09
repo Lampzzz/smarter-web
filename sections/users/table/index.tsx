@@ -1,48 +1,44 @@
 "use client";
 
-import { useEffect } from "react";
-import useShelterStore from "@/store/shelterStore";
 import { DataTable } from "@/components/ui/table/data-table";
-import { columns } from "./columns";
-import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
-import {
-  useShelterTableFilters,
-  STATUS_OPTIONS,
-} from "./use-shelter-table-filters";
+import { DataTableSearch } from "@/components/ui/table/data-table-search";
+import { GENDER_OPTIONS, useUserTableFilters } from "./use-user-table-filters";
+import { columns } from "./columns";
+import useUserstore from "@/store/userStore";
+import { useEffect } from "react";
 
 export interface FilterTypes {
   page?: number;
   limit?: number;
-  status?: string;
+  gender?: string;
   search?: string;
 }
 
-const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
-  const { filteredShelters, fetchShelters, filterShelters, isLoading } =
-    useShelterStore();
+export default function UserTable({ filters }: { filters: FilterTypes }) {
+  const { fetchUsers, filteredUsers, filterUsers, isLoading } = useUserstore();
 
   useEffect(() => {
-    fetchShelters();
-  }, [fetchShelters]);
+    fetchUsers();
+  }, [fetchUsers]);
 
   useEffect(() => {
-    filterShelters(filters);
-  }, [filters, filterShelters]);
+    filterUsers(filters);
+  }, [filterUsers, filters]);
 
   const {
-    statusFilter,
-    setStatusFilter,
+    genderFilter,
+    setGenderFilter,
     isAnyFilterActive,
     resetFilters,
     searchQuery,
     setPage,
     setSearchQuery,
-  } = useShelterTableFilters();
+  } = useUserTableFilters();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div className="flex flex-wrap items-center gap-4">
         <DataTableSearch
           searchKey="name"
@@ -51,11 +47,11 @@ const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
           setPage={setPage}
         />
         <DataTableFilterBox
-          filterKey="status"
-          title="Status"
-          options={STATUS_OPTIONS}
-          setFilterValue={setStatusFilter}
-          filterValue={statusFilter}
+          filterKey="gender"
+          title="Gender"
+          options={GENDER_OPTIONS}
+          setFilterValue={setGenderFilter}
+          filterValue={genderFilter}
         />
         <DataTableResetFilter
           isFilterActive={isAnyFilterActive}
@@ -64,12 +60,10 @@ const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
       </div>
       <DataTable
         columns={columns}
-        data={filteredShelters}
-        totalItems={filteredShelters.length}
+        data={filteredUsers}
+        totalItems={filteredUsers.length}
         isLoading={isLoading}
       />
     </div>
   );
-};
-
-export default ShelterTable;
+}

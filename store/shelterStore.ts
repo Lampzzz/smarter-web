@@ -1,5 +1,5 @@
 import { getAllShelters } from "@/firebase/firestore";
-import { FilterTypes, Shelter } from "@/types";
+import { ShelterFilterTypes, Shelter } from "@/types";
 import { create } from "zustand";
 
 interface ShelterState {
@@ -7,7 +7,7 @@ interface ShelterState {
   error: string;
   shelters: Shelter[] | null;
   fetchShelters: () => Promise<void>;
-  filterShelters: (filters: FilterTypes) => void;
+  filterShelters: (filters: ShelterFilterTypes) => void;
   filteredShelters: Shelter[];
 }
 
@@ -27,7 +27,12 @@ const useShelterStore = create<ShelterState>((set, get) => ({
     }
   },
 
-  filterShelters: ({ page = 1, limit = 10, status, search }: FilterTypes) => {
+  filterShelters: ({
+    page = 1,
+    limit = 10,
+    status,
+    search,
+  }: ShelterFilterTypes) => {
     let shelters = get().shelters ?? [];
     const statusArray = status ? status.split(".") : [];
 
@@ -43,10 +48,7 @@ const useShelterStore = create<ShelterState>((set, get) => ({
       );
     }
 
-    const offset = (page - 1) * limit;
-    const paginatedShelters = shelters.slice(offset, offset + limit);
-
-    set({ filteredShelters: paginatedShelters });
+    set({ filteredShelters: shelters });
   },
 }));
 

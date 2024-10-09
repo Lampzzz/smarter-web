@@ -43,18 +43,29 @@ export interface Shelter {
   status: "available" | "used" | "maintenance";
 }
 
-export interface User {
+export interface UserFormValues {
   id: string;
   firstName: string;
   lastName: string;
   middleName?: string;
   email: string;
   phoneNumber: string;
-  gender: "Male" | "Female";
+  gender: "male" | "female";
   dateOfBirth: string;
   age: number;
   address: string;
   picture: string;
+}
+
+export interface User {
+  id: string;
+  fullName: string;
+  email?: string;
+  phoneNumber?: string;
+  gender: string;
+  age: number;
+  address: string;
+  picture?: string;
 }
 
 export interface FieldErrorMessage {
@@ -81,7 +92,14 @@ export interface newAdminProps {
   authId: string;
 }
 
-export interface FilterTypes {
+export interface UserFilterTypes {
+  page?: number;
+  limit?: number;
+  gender?: string;
+  search?: string;
+}
+
+export interface ShelterFilterTypes {
   page?: number;
   limit?: number;
   status?: string;

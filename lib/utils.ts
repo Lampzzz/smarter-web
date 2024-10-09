@@ -33,3 +33,12 @@ export function fireBaseError(error: string) {
 
   return errors;
 }
+
+export const formatBirthDate = (date: string): number => {
+  const birthDate = new Date(date);
+  const dateNow = new Date();
+  let diffInMilliseconds: number = dateNow.getTime() - birthDate.getTime();
+  const millisecondsInYear = 1000 * 60 * 60 * 24 * 365.25;
+
+  return Math.floor(diffInMilliseconds / millisecondsInYear);
+};

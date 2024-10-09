@@ -80,13 +80,13 @@ export function DataTable<TData, TValue>({
     setPageSize(pagination.pageSize);
   };
 
-  // const paginatedData = data.slice(
-  //   paginationState.pageIndex * paginationState.pageSize,
-  //   (paginationState.pageIndex + 1) * paginationState.pageSize
-  // );
+  const paginatedData = data.slice(
+    paginationState.pageIndex * paginationState.pageSize,
+    (paginationState.pageIndex + 1) * paginationState.pageSize
+  );
 
   const table = useReactTable({
-    data,
+    data: paginatedData,
     columns,
     pageCount: pageCount,
     state: {

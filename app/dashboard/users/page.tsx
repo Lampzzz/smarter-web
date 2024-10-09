@@ -1,17 +1,17 @@
 import { SearchParams } from "nuqs/parsers";
 import { searchParamsCache } from "@/lib/searchparams";
-import ShelterPage from "@/sections/shelter";
+import UsersListingPage from "@/sections/users";
 
 type PageProps = {
   searchParams: SearchParams;
 };
 
 export const metadata = {
-  title: "Dashboard: Shelter",
+  title: "Dashboard: Users",
 };
 
 export default function Shelter({ searchParams }: PageProps) {
   searchParamsCache.parse(searchParams);
 
-  return <ShelterPage />;
+  return <UsersListingPage />;
 }
