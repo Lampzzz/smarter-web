@@ -7,10 +7,7 @@ import { columns } from "./columns";
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
-import {
-  useShelterTableFilters,
-  STATUS_OPTIONS,
-} from "./use-shelter-table-filters";
+import { useShelterTableFilters, STATUS_OPTIONS } from "./table-filters";
 
 export interface FilterTypes {
   page?: number;

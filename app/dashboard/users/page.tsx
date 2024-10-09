@@ -7,7 +7,7 @@ type PageProps = {
 };
 
 export const metadata = {
-  title: "Dashboard: Users",
+  title: "Users",
 };
 
 export default function Shelter({ searchParams }: PageProps) {

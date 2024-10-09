@@ -41,7 +41,7 @@ export default async function Shelter() {
           />
 
           <Link
-            href={"/dashboard/employee/new"}
+            href={"/dashboard/shelter/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
