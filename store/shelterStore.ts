@@ -1,4 +1,4 @@
-import { getAllShelters } from "@/firebase/firestore";
+import { deleteShelter, getAllShelters } from "@/firebase/firestore";
 import { ShelterFilterTypes, Shelter } from "@/types";
 import { create } from "zustand";
 
@@ -9,6 +9,8 @@ interface ShelterState {
   fetchShelters: () => Promise<void>;
   filterShelters: (filters: ShelterFilterTypes) => void;
   filteredShelters: Shelter[];
+  handleDelete: (id: string) => Promise<void>;
+  totalData: number;
 }
 
 const useShelterStore = create<ShelterState>((set, get) => ({
@@ -16,6 +18,7 @@ const useShelterStore = create<ShelterState>((set, get) => ({
   error: "",
   shelters: [],
   filteredShelters: [],
+  totalData: get().shelters?.length ?? 0,
 
   async fetchShelters() {
     try {
@@ -49,6 +52,15 @@ const useShelterStore = create<ShelterState>((set, get) => ({
     }
 
     set({ filteredShelters: shelters });
+  },
+
+  handleDelete: async (id: string) => {
+    try {
+      await deleteShelter(id);
+      await get().fetchShelters();
+    } catch (error) {
+      console.error(error);
+    }
   },
 }));
 

@@ -23,15 +23,18 @@ import {
 } from "@radix-ui/react-icons";
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { parseAsInteger, useQueryState } from "nuqs";
 import { Skeleton } from "../skeleton";
+import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -48,6 +51,8 @@ export function DataTable<TData, TValue>({
   pageSizeOptions = [10, 20, 30, 40, 50],
   isLoading = false,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const [currentPage, setCurrentPage] = useQueryState(
     "page",
     parseAsInteger.withOptions({ shallow: false }).withDefault(1)
@@ -91,12 +96,15 @@ export function DataTable<TData, TValue>({
     pageCount: pageCount,
     state: {
       pagination: paginationState,
+      sorting,
     },
     onPaginationChange: handlePaginationChange,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     manualPagination: true,
     manualFiltering: true,
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
   });
 
   return (
@@ -139,7 +147,10 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className={cell.column.id === "email" ? "" : "capitalize"}
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

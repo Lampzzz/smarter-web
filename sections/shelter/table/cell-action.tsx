@@ -8,6 +8,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteShelter } from "@/firebase/firestore";
+import useShelterStore from "@/store/shelterStore";
 import { Shelter } from "@/types";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -22,7 +24,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const { handleDelete } = useShelterStore();
+
+  const onConfirm = async () => {
+    setLoading(true);
+
+    try {
+      await handleDelete(data.id);
+      setOpen(false);
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -43,7 +58,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/user/${data.id}`)}
+            onClick={() => router.push(`/dashboard/shelter/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

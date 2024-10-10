@@ -1,6 +1,13 @@
-import { Shelter, newAdminProps } from "@/types";
+import { Shelter, ShelterData, newAdminProps } from "@/types";
 import { db } from "./config";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { formatBirthDate } from "@/lib/utils";
 
 // Create new admin
@@ -35,6 +42,32 @@ export const getAllShelters = async () => {
   }
 };
 
+export const deleteShelter = async (id: string) => {
+  try {
+    await deleteDoc(doc(db, "shelters", id));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Get a single shelter
+export const getShelter = async (id: string) => {
+  try {
+    const ref = doc(db, "shelters", id);
+    const docSnap = await getDoc(ref);
+
+    if (!docSnap.exists()) return null;
+
+    return {
+      id: docSnap.id,
+      ...docSnap.data(),
+    } as Shelter;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 // Fetch all users
 export const getAllUsers = async () => {
   try {
@@ -57,5 +90,24 @@ export const getAllUsers = async () => {
   } catch (error) {
     console.error(error);
     return [];
+  }
+};
+
+// Insert new shelter
+export const addShelter = async (data: ShelterData) => {
+  try {
+    const ref = collection(db, "shelters");
+
+    await addDoc(ref, {
+      name: data.name,
+      location: data.location,
+      type: data.type,
+      capacity: data.capacity,
+      status: data.status,
+    });
+
+    return { success: true };
+  } catch (error: any) {
+    throw new Error(error);
   }
 };

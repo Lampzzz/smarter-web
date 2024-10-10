@@ -105,3 +105,11 @@ export interface ShelterFilterTypes {
   status?: string;
   search?: string;
 }
+
+export interface ShelterData {
+  name: string;
+  location: string;
+  type: "permanent" | "temporary";
+  capacity: string;
+  status: "available" | "occupied" | "maintenance";
+}

@@ -22,6 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { addShelter } from "@/firebase/firestore";
+import { useToast } from "@/hooks/useToast";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -42,12 +44,13 @@ const formSchema = z.object({
     .refine(
       (val) => !isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 8,
       {
-        message: "Capacity must be between 0 and 8.",
+        message: "Capacity must be between 0 and 5.",
       }
     ),
 });
 
 export default function ShelterForm() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -59,8 +62,23 @@ export default function ShelterForm() {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const response = await addShelter(values);
+
+      if (!response.success) {
+        console.log("error");
+      }
+
+      form.reset();
+
+      toast({
+        title: "Shelter created",
+        description: "Shelter created successfully",
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -156,8 +174,8 @@ export default function ShelterForm() {
                     <Input
                       type="number"
                       min={0}
-                      max={8}
-                      placeholder="Enter capacity (0-8)"
+                      max={5}
+                      placeholder="Enter capacity (0-5)"
                       {...field}
                     />
                     <FormMessage />
