@@ -8,6 +8,7 @@ type PageProps = {
 
 export const metadata = {
   title: "Shelter",
+  descriptin: "Manage shelter information",
 };
 
 export default function Shelter({ searchParams }: PageProps) {

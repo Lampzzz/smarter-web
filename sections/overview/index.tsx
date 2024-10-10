@@ -19,13 +19,13 @@ export default function Overview() {
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      title: "Total Sales",
+      title: "Test Data",
       amount: "+12,234",
       change: "+19% from last month",
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      title: "Active Now",
+      title: "Test Data",
       amount: "+573",
       change: "+201 since last hour",
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
