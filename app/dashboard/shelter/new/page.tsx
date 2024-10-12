@@ -1,5 +1,5 @@
 import ShelterForm from "@/sections/shelter/form";
-import { Breadcrumbs } from "@/components/breadcrumb";
+import { Breadcrumbs } from "@/components/Breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const metadata = {

@@ -1,7 +1,7 @@
 "use client";
 
 import useShelterStore from "@/store/shelterStore";
-import { Heading } from "@/components/heading";
+import { Heading } from "@/components/Heading";
 
 export default function ShelterCount() {
   const { totalData } = useShelterStore();

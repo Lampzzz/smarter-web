@@ -4,7 +4,7 @@ import { Plus } from "lucide-react";
 import PageContainer from "@/components/layout/page-container";
 import UserTable from "./table";
 import UserCount from "./table/count";
-import { Breadcrumbs } from "@/components/breadcrumb";
+import { Breadcrumbs } from "@/components/Breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";

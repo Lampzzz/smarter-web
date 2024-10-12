@@ -1,5 +1,5 @@
 import UserForm from "@/sections/tenant/form";
-import { Breadcrumbs } from "@/components/breadcrumb";
+import { Breadcrumbs } from "@/components/Breadcrumb";
 import PageContainer from "@/components/layout/page-container";
 
 export const metadata = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading } from "@/components/heading";
+import { Heading } from "@/components/Heading";
 import useUserStore from "@/store/userStore";
 
 export default function UserCount() {
