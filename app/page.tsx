@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import useAuthStore from "@/store/authStore";
 import Login from "./(auth)/login/page";
+import Loading from "@/components/loading";
 
 export default function Page() {
   const { isLoading, isAuthenticated, initializeAuthListener } = useAuthStore();
@@ -21,7 +22,7 @@ export default function Page() {
     }
   }, [isLoading, isAuthenticated, router]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   return <Login />;
 }
