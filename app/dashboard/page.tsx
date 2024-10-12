@@ -1,5 +1,6 @@
-import Overview from "@/sections/overview";
 import type { Metadata } from "next";
+
+import Overview from "@/sections/overview";
 
 export const metadata: Metadata = {
   title: "Overview",

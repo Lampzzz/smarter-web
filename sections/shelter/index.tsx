@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { Breadcrumbs } from "@/components/breadcrumb";
-import { Heading } from "@/components/heading";
+
 import PageContainer from "@/components/layout/page-container";
+import ShelterTable from "./table";
+import ShelterCount from "./table/count";
+import { Breadcrumbs } from "@/components/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
-import ShelterTable from "./table";
-import { getAllShelters } from "@/firebase/firestore";
+import { cn } from "@/lib/utils";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
@@ -28,18 +28,12 @@ export default async function Shelter() {
     ...(status && { status: status }),
   };
 
-  const shelters = await getAllShelters();
-
   return (
     <PageContainer>
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">
-          <Heading
-            title={`Shelter (${shelters?.length})`}
-            description="Manage shelter"
-          />
-
+          <ShelterCount />
           <Link
             href={"/dashboard/shelter/new"}
             className={cn(buttonVariants({ variant: "default" }))}

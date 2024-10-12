@@ -41,6 +41,7 @@ export const register = async ({
 
     const user = userCredential.user;
     await newAdmin({ name, email, authId: user.uid });
+    await login(email, password);
 
     return { success: true };
   } catch (error: any) {

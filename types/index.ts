@@ -1,4 +1,3 @@
-import { Icons } from "@/components/icons";
 import { User as FirebaseUser } from "firebase/auth";
 import {
   FieldError,
@@ -6,6 +5,13 @@ import {
   Merge,
   UseFormRegister,
 } from "react-hook-form";
+
+import { Icons } from "@/components/icons";
+
+export type ValidFieldNames = "name" | "email" | "password";
+export type ShelterStatus = "available" | "occupied" | "maintenance";
+export type ShelterType = "permanent" | "temporary";
+export type Gender = "male" | "female";
 
 export interface NavItem {
   title: string;
@@ -32,29 +38,26 @@ export interface FormFieldProps {
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
 }
 
-export type ValidFieldNames = "name" | "email" | "password";
-
 export interface Shelter {
-  id: string;
+  id?: string;
   name: string;
   location: string;
-  type: "permanent" | "temporary";
+  type: ShelterType;
   capacity: number;
-  status: "available" | "used" | "maintenance";
+  status: ShelterStatus;
 }
 
-export interface UserFormValues {
-  id: string;
+export interface UserForm {
+  id?: string;
   firstName: string;
   lastName: string;
   middleName?: string;
   email: string;
   phoneNumber: string;
-  gender: "male" | "female";
+  gender: Gender;
   dateOfBirth: string;
-  age: number;
+  age?: number;
   address: string;
-  picture: string;
 }
 
 export interface User {
@@ -79,11 +82,37 @@ export interface FirebaseErrors {
   general?: FieldErrorMessage;
 }
 
-export interface UserState {
+export interface AuthStore {
   currentUser: FirebaseUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   initializeAuthListener: () => () => void;
+}
+
+export interface ShelterStore {
+  shelters: Shelter[] | null;
+  filteredShelters: Shelter[];
+  shelter: Shelter | null;
+  isLoading: boolean;
+  totalData: number;
+  fetchShelters: () => Promise<void>;
+  filterShelters: (filters: ShelterFilterTypes) => void;
+  fetchShelter: (id: string) => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
+  handleUpdate: (data: Shelter, id: string) => Promise<void>;
+}
+
+export interface UserStore {
+  users: User[] | null;
+  user: UserForm | null;
+  totalData: number;
+  filteredUsers: User[];
+  isLoading: boolean;
+  fetchUsers: () => Promise<void>;
+  filterUsers: (filters: UserFilterTypes) => void;
+  handleDelete: (id: string) => Promise<void>;
+  fetchUser: (id: string) => Promise<void>;
+  handleUpdate: (data: User, id: string) => Promise<void>;
 }
 
 export interface newAdminProps {
@@ -104,12 +133,4 @@ export interface ShelterFilterTypes {
   limit?: number;
   status?: string;
   search?: string;
-}
-
-export interface ShelterData {
-  name: string;
-  location: string;
-  type: "permanent" | "temporary";
-  capacity: string;
-  status: "available" | "occupied" | "maintenance";
 }

@@ -1,9 +1,10 @@
-import { auth } from "@/firebase/config";
-import { UserState } from "@/types";
-import { onAuthStateChanged } from "firebase/auth";
 import { create } from "zustand";
+import { onAuthStateChanged } from "firebase/auth";
 
-const useAuthStore = create<UserState>((set, get) => ({
+import { auth } from "@/firebase/config";
+import { AuthStore } from "@/types";
+
+const useAuthStore = create<AuthStore>((set, get) => ({
   currentUser: null,
   isAuthenticated: false,
   isLoading: true,

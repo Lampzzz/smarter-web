@@ -1,5 +1,3 @@
-import { Shelter, ShelterData, newAdminProps } from "@/types";
-import { db } from "./config";
 import {
   addDoc,
   collection,
@@ -7,7 +5,11 @@ import {
   doc,
   getDoc,
   getDocs,
+  setDoc,
 } from "firebase/firestore";
+
+import { db } from "./config";
+import { Shelter, UserForm, newAdminProps } from "@/types";
 import { formatBirthDate } from "@/lib/utils";
 
 // Create new admin
@@ -39,14 +41,6 @@ export const getAllShelters = async () => {
   } catch (error) {
     console.error(error);
     return [];
-  }
-};
-
-export const deleteShelter = async (id: string) => {
-  try {
-    await deleteDoc(doc(db, "shelters", id));
-  } catch (error) {
-    console.error(error);
   }
 };
 
@@ -93,8 +87,26 @@ export const getAllUsers = async () => {
   }
 };
 
+// Get a single user
+export const getUser = async (id: string) => {
+  try {
+    const ref = doc(db, "users", id);
+    const docSnap = await getDoc(ref);
+
+    if (!docSnap.exists()) return null;
+
+    return {
+      id: docSnap.id,
+      ...docSnap.data(),
+    };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 // Insert new shelter
-export const addShelter = async (data: ShelterData) => {
+export const createShelter = async (data: Shelter) => {
   try {
     const ref = collection(db, "shelters");
 
@@ -109,5 +121,56 @@ export const addShelter = async (data: ShelterData) => {
     return { success: true };
   } catch (error: any) {
     throw new Error(error);
+  }
+};
+
+// Update shelter
+export const updateShelter = async (data: Shelter, id: string) => {
+  try {
+    const ref = doc(db, "shelters", id);
+
+    await setDoc(ref, data);
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+// Delete Shelter
+export const deleteShelter = async (id: string) => {
+  try {
+    await deleteDoc(doc(db, "shelters", id));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Create New User
+export const createUser = async (data: UserForm) => {
+  try {
+    await addDoc(collection(db, "users"), {
+      ...data,
+      age: formatBirthDate(data.dateOfBirth),
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// Update shelter
+export const updateUser = async (data: Omit<UserForm, "id">, id: string) => {
+  try {
+    const ref = doc(db, "users", id);
+    await setDoc(ref, data);
+  } catch (error: any) {
+    throw new Error(error);
+  }
+};
+
+// Delete User
+export const deleteUser = async (id: string) => {
+  try {
+    await deleteDoc(doc(db, "users", id));
+  } catch (error) {
+    console.error(error);
   }
 };

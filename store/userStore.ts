@@ -1,29 +1,27 @@
-import { getAllUsers } from "@/firebase/firestore";
-import { UserFilterTypes, User } from "@/types";
 import { create } from "zustand";
 
-interface UserState {
-  isLoading: boolean;
-  error: string;
-  users: User[] | null;
-  fetchUsers: () => Promise<void>;
-  filterUsers: (filters: UserFilterTypes) => void;
-  filteredUsers: User[];
-}
+import { UserFilterTypes, UserForm, UserStore } from "@/types";
+import {
+  deleteUser,
+  getAllUsers,
+  getUser,
+  updateUser,
+} from "@/firebase/firestore";
 
-const useUserstore = create<UserState>((set, get) => ({
-  isLoading: true,
-  error: "",
+const useUserStore = create<UserStore>((set, get) => ({
+  isLoading: false,
   users: [],
   filteredUsers: [],
+  totalData: 0,
+  user: null,
 
   async fetchUsers() {
     try {
       const data = await getAllUsers();
-      set({ isLoading: false, error: "", users: data });
+      set({ isLoading: false, users: data, totalData: data.length });
       get().filterUsers({ page: 1, limit: 10 });
     } catch (error) {
-      set({ isLoading: false, error: (error as Error).message });
+      set({ isLoading: false });
     }
   },
 
@@ -45,6 +43,39 @@ const useUserstore = create<UserState>((set, get) => ({
 
     set({ filteredUsers: users });
   },
+
+  fetchUser: async (id: string) => {
+    try {
+      const data = await getUser(id);
+
+      set({ user: data as UserForm });
+    } catch (error) {
+      console.error(error);
+      set({ user: null });
+    }
+  },
+
+  handleUpdate: async (data: any, id: string) => {
+    set({ isLoading: true });
+
+    try {
+      await updateUser(data, id);
+      await get().fetchUser(id);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  handleDelete: async (id: string) => {
+    try {
+      await deleteUser(id);
+      await get().fetchUsers();
+    } catch (error) {
+      console.error(error);
+    }
+  },
 }));
 
-export default useUserstore;
+export default useUserStore;

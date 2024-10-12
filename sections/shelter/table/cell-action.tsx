@@ -1,6 +1,13 @@
 "use client";
+
+import { useState } from "react";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import useShelterStore from "@/store/shelterStore";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
+import { Shelter } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,23 +15,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteShelter } from "@/firebase/firestore";
-import useShelterStore from "@/store/shelterStore";
-import { Shelter } from "@/types";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
 
 interface CellActionProps {
   data: Shelter;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const { handleDelete } = useShelterStore();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
-  const { handleDelete } = useShelterStore();
 
   const onConfirm = async () => {
     setLoading(true);

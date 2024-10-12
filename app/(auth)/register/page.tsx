@@ -5,22 +5,21 @@ import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import GoogleButton from "@/components/google-button";
+import { FirebaseErrors, FieldErrorMessage } from "@/types";
+import { register } from "@/firebase/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { FirebaseErrors, FieldErrorMessage } from "@/types";
-import { useRouter } from "next/navigation";
-import { register } from "@/firebase/auth";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }).min(2, {
@@ -33,11 +32,20 @@ const formSchema = z.object({
 
   password: z
     .string()
-    .min(1, { message: "Password is required." })
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,20}$/,
-      { message: "Invalid Password Format." }
-    ),
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .max(20, { message: "Password cannot exceed 20 characters." })
+    .refine((val) => /[a-z]/.test(val), {
+      message: "Password must include at least one lowercase letter.",
+    })
+    .refine((val) => /[A-Z]/.test(val), {
+      message: "Password must include at least one uppercase letter.",
+    })
+    .refine((val) => /\d/.test(val), {
+      message: "Password must include at least one number.",
+    })
+    .refine((val) => /[@$!%*?&#]/.test(val), {
+      message: "Password must include at least one special character.",
+    }),
 });
 
 type RegisterFormValue = z.infer<typeof formSchema>;
@@ -55,10 +63,7 @@ export default function Register() {
     },
   });
 
-  const handleFetchErrors = async (response: Response) => {
-    const errorData = await response.json();
-    const errors = errorData as FirebaseErrors;
-
+  const handleFetchErrors = async (errors: FirebaseErrors) => {
     if (errors) {
       Object.entries(errors).forEach(([field, error]) => {
         const { message } = error as FieldErrorMessage;
@@ -68,7 +73,7 @@ export default function Register() {
         });
       });
     } else {
-      console.error("General error:", errorData.error || "Unknown error");
+      console.error("Unknown error");
     }
   };
 
@@ -81,8 +86,7 @@ export default function Register() {
       if (response.success) {
         router.push("/dashboard");
       } else {
-        // handleFetchErrors(response.error);
-        console.log(response.error);
+        handleFetchErrors(response.error);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -160,11 +164,6 @@ export default function Register() {
                           {...field}
                         />
                       </FormControl>
-                      {/* <FormDescription>
-                        The password must be 8-20 characters long and include at
-                        least one uppercase letter, lowercase letter, number,
-                        and special character.
-                      </FormDescription> */}
                       <FormMessage />
                     </FormItem>
                   )}

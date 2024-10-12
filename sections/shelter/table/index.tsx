@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+
 import useShelterStore from "@/store/shelterStore";
 import { DataTable } from "@/components/ui/table/data-table";
 import { columns } from "./columns";
@@ -8,15 +9,9 @@ import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
 import { useShelterTableFilters, STATUS_OPTIONS } from "./table-filters";
+import { ShelterFilterTypes } from "@/types";
 
-export interface FilterTypes {
-  page?: number;
-  limit?: number;
-  status?: string;
-  search?: string;
-}
-
-const ShelterTable = ({ filters }: { filters: FilterTypes }) => {
+const ShelterTable = ({ filters }: { filters: ShelterFilterTypes }) => {
   const { filteredShelters, fetchShelters, filterShelters, isLoading } =
     useShelterStore();
 

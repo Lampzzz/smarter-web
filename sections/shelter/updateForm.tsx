@@ -1,11 +1,12 @@
 "use client";
 
-import * as React from "react";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+import useShelterStore from "@/store/shelterStore";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/useToast";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Form,
@@ -15,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -23,62 +23,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createShelter } from "@/firebase/firestore";
-import { useToast } from "@/hooks/useToast";
 
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  location: z.string().min(1, {
-    message: "Location is required.",
-  }),
-  status: z.enum(["available", "maintenance", "occupied"], {
-    required_error: "Please select a status.",
-  }),
-  type: z.enum(["permanent", "temporary"], {
-    required_error: "Please select a type.",
-  }),
-  capacity: z
-    .string()
-    .min(1, { message: "Capacity is required." })
-    .refine(
-      (val) => !isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 8,
-      {
-        message: "Capacity must be between 0 and 5.",
-      }
-    ),
-});
-
-export default function ShelterForm() {
+export default function ShelterUpdateForm({ id }: { id: string }) {
+  const { shelter, fetchShelter, handleUpdate, isLoading } = useShelterStore();
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      location: "",
-      status: undefined,
-      type: undefined,
-      capacity: "0",
-    },
-  });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const form = useForm();
+
+  useEffect(() => {
+    const fetchShelterData = async () => {
+      await fetchShelter(id);
+    };
+
+    fetchShelterData();
+  }, [id, fetchShelter]);
+
+  useEffect(() => {
+    if (shelter) {
+      form.reset(shelter);
+    }
+  }, [shelter, form]);
+
+  const onSubmit = async (data: any) => {
     try {
-      const response = await createShelter(values);
-
-      if (!response.success) {
-        console.log("error");
-      }
-
-      form.reset();
+      await handleUpdate(data, id);
 
       toast({
-        title: "Shelter created",
-        description: "Shelter created successfully",
+        title: "Shelter updated",
+        description: "Shelter updated successfully",
       });
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      throw new Error(error);
     }
   };
 
@@ -184,7 +159,9 @@ export default function ShelterForm() {
                 )}
               />
             </div>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isLoading}>
+              Update
+            </Button>
           </form>
         </Form>
       </CardContent>

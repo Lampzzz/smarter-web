@@ -1,4 +1,5 @@
 import { SearchParams } from "nuqs/parsers";
+
 import { searchParamsCache } from "@/lib/searchparams";
 import ShelterPage from "@/sections/shelter";
 

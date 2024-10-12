@@ -1,18 +1,18 @@
-import { Breadcrumbs } from "@/components/breadcrumb";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+
 import PageContainer from "@/components/layout/page-container";
+import UserTable from "./table";
+import UserCount from "./table/count";
+import { Breadcrumbs } from "@/components/breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
-import { Heading } from "@/components/heading";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
 import { cn } from "@/lib/utils";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import UserTable from "./table";
-import { getAllUsers } from "@/firebase/firestore";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Users", link: "/dashboard/users" },
+  { title: "Tenant", link: "/dashboard/tenant" },
 ];
 
 export default async function UsersListingPage() {
@@ -28,17 +28,12 @@ export default async function UsersListingPage() {
     ...(gender && { genders: gender }),
   };
 
-  const users = await getAllUsers();
-
   return (
     <PageContainer>
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">
-          <Heading
-            title={`Users (${users?.length})`}
-            description="Manage Users"
-          />
+          <UserCount />
           <Link
             href={"/dashboard/users/new"}
             className={cn(buttonVariants({ variant: "default" }))}

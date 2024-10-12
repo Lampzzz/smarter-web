@@ -1,14 +1,19 @@
 "use client";
 
-import * as React from "react";
 import * as z from "zod";
-import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useForm } from "react-hook-form";
+import { CalendarIcon } from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { createUser } from "@/firebase/firestore";
+import { useToast } from "@/hooks/useToast";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -17,7 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -30,7 +34,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
 
 const formSchema = z.object({
   firstName: z.string().min(1, {
@@ -46,18 +49,10 @@ const formSchema = z.object({
   email: z.string().min(1, {
     message: "Email is required.",
   }),
-  phoneNumber: z
-    .string()
-    .min(1, {
-      message: "Phone number is required.",
-    })
-    .min(11, {
-      message: "Phone number must be 11 digits number.",
-    })
-    .max(11, {
-      message: "Phone number must be 11 digits number.",
-    }),
-  birthDate: z.date({
+  phoneNumber: z.string().min(1, {
+    message: "Phone number is required.",
+  }),
+  dateOfBirth: z.date({
     required_error: "A date of birth is required.",
   }),
   gender: z.enum(["male", "female"], {
@@ -66,6 +61,10 @@ const formSchema = z.object({
 });
 
 export default function UserForm() {
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,15 +72,32 @@ export default function UserForm() {
       lastName: "",
       middleName: "",
       gender: undefined,
-      birthDate: undefined,
+      dateOfBirth: undefined,
       address: "",
       email: "",
       phoneNumber: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+
+    try {
+      await createUser({
+        ...values,
+        dateOfBirth: format(values.dateOfBirth, "yyyy-MM-dd"),
+      });
+      form.reset();
+
+      toast({
+        title: "User created",
+        description: "User created successfully",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -136,32 +152,38 @@ export default function UserForm() {
               />
               <FormField
                 control={form.control}
-                name="birthDate"
+                name="dateOfBirth"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col justify-end">
+                  <FormItem>
                     <FormLabel>Date of birth</FormLabel>
-                    <Popover>
+                    <Popover open={open} onOpenChange={setOpen}>
                       <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button variant={"outline"}>
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Select birth date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Select birth date</span>
+                          )}
+                        </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      <PopoverContent align="start" className=" w-auto p-0">
                         <Calendar
                           mode="single"
+                          captionLayout="dropdown-buttons"
                           selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("2000-01-01")
-                          }
-                          initialFocus
+                          onSelect={(data) => {
+                            field.onChange(data);
+                            setOpen(false);
+                          }}
+                          fromYear={1960}
+                          toYear={2030}
                         />
                       </PopoverContent>
                     </Popover>
@@ -230,7 +252,9 @@ export default function UserForm() {
                 )}
               />
             </div>
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={loading}>
+              Submit
+            </Button>
           </form>
         </Form>
       </CardContent>

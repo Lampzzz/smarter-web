@@ -28,8 +28,16 @@ export default function Sidebar({ className }: SidebarProps) {
         className
       )}
     >
-      <div className="hidden p-5 pt-10 lg:block">
+      <div className="hidden p-5 pt-10 lg:flex items-center gap-4">
         <Image src={images.logo} alt="logo" width={30} height={30} />
+        <h1
+          className={cn(
+            "text-xl font-bold transition overflow-hidden",
+            isMinimized && "hidden"
+          )}
+        >
+          SmarTer
+        </h1>
       </div>
       <ChevronLeft
         className={cn(

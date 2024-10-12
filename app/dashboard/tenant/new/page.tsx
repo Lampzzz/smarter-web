@@ -1,23 +1,23 @@
-import ShelterForm from "@/sections/shelter/form";
+import UserForm from "@/sections/tenant/form";
 import { Breadcrumbs } from "@/components/breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const metadata = {
-  title: "New Shelter",
+  title: "New Tenant",
 };
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Shelter", link: "/dashboard/shelter" },
-  { title: "Create", link: "/dashboard/shelter/create" },
+  { title: "Tenant", link: "/dashboard/tenant" },
+  { title: "Create", link: "/dashboard/tenant/create" },
 ];
 
-export default function ShelterViewPage() {
+export default function EmployeeViewPage() {
   return (
     <ScrollArea className="h-full">
       <div className="flex-1 space-y-4 p-8">
         <Breadcrumbs items={breadcrumbItems} />
-        <ShelterForm />
+        <UserForm />
       </div>
     </ScrollArea>
   );
