@@ -30,8 +30,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     setLoading(true);
 
     try {
-      await handleDelete(data.id);
-      setOpen(false);
+      if (data.id) {
+        await handleDelete(data.id);
+        setOpen(false);
+      } else {
+        console.error("ID not found");
+      }
     } catch (error: any) {
       console.error(error);
     } finally {
