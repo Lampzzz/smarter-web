@@ -1,4 +1,11 @@
 "use client";
+
+import { useState } from "react";
+import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import useUserStore from "@/store/userStore";
+import { User } from "@/types";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,11 +15,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useUserStore from "@/store/userStore";
-import { User } from "@/types";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 interface CellActionProps {
   data: User;
@@ -29,8 +31,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     setLoading(true);
 
     try {
-      await handleDelete(data.id);
-      setOpen(false);
+      if (data.id) {
+        await handleDelete(data.id);
+        setOpen(false);
+      } else {
+        console.error("ID not found");
+      }
     } catch (error: any) {
       console.error(error);
     } finally {
