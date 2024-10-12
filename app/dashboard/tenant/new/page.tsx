@@ -1,6 +1,6 @@
 import UserForm from "@/sections/tenant/form";
 import { Breadcrumbs } from "@/components/breadcrumb";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import PageContainer from "@/components/layout/page-container";
 
 export const metadata = {
   title: "New Tenant",
@@ -14,11 +14,11 @@ const breadcrumbItems = [
 
 export default function EmployeeViewPage() {
   return (
-    <ScrollArea className="h-full">
-      <div className="flex-1 space-y-4 p-8">
+    <PageContainer scrollable={true}>
+      <div className="flex-1 space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <UserForm />
       </div>
-    </ScrollArea>
+    </PageContainer>
   );
 }

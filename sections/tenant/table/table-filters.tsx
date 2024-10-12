@@ -41,11 +41,11 @@ export function useUserTableFilters() {
   return {
     searchQuery,
     setSearchQuery,
+    genderFilter,
+    setGenderFilter,
     page,
     setPage,
     resetFilters,
     isAnyFilterActive,
-    genderFilter,
-    setGenderFilter,
   };
 }

@@ -1,22 +1,17 @@
 "use client";
 
+import { useEffect } from "react";
+
+import useUserstore from "@/store/userStore";
 import { DataTable } from "@/components/ui/table/data-table";
 import { DataTableFilterBox } from "@/components/ui/table/data-table-filter-box";
 import { DataTableResetFilter } from "@/components/ui/table/data-table-reset-filter";
 import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { GENDER_OPTIONS, useUserTableFilters } from "./table-filters";
 import { columns } from "./columns";
-import useUserstore from "@/store/userStore";
-import { useEffect } from "react";
+import { UserFilterTypes } from "@/types";
 
-export interface FilterTypes {
-  page?: number;
-  limit?: number;
-  gender?: string;
-  search?: string;
-}
-
-export default function UserTable({ filters }: { filters: FilterTypes }) {
+export default function UserTable({ filters }: { filters: UserFilterTypes }) {
   const { fetchUsers, filteredUsers, filterUsers, isLoading } = useUserstore();
 
   useEffect(() => {
@@ -25,7 +20,7 @@ export default function UserTable({ filters }: { filters: FilterTypes }) {
 
   useEffect(() => {
     filterUsers(filters);
-  }, [filterUsers, filters]);
+  }, [filters, filterUsers]);
 
   const {
     genderFilter,
@@ -36,6 +31,8 @@ export default function UserTable({ filters }: { filters: FilterTypes }) {
     setPage,
     setSearchQuery,
   } = useUserTableFilters();
+
+  console.log(filters);
 
   return (
     <div className="space-y-4 ">

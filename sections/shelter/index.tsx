@@ -29,7 +29,7 @@ export default async function Shelter() {
   };
 
   return (
-    <PageContainer>
+    <PageContainer scrollable={true}>
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">

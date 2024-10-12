@@ -29,13 +29,13 @@ export default async function UsersListingPage() {
   };
 
   return (
-    <PageContainer>
+    <PageContainer scrollable={true}>
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">
           <UserCount />
           <Link
-            href={"/dashboard/users/new"}
+            href={"/dashboard/tenant/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New

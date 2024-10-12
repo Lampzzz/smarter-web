@@ -25,14 +25,12 @@ const useUserStore = create<UserStore>((set, get) => ({
     }
   },
 
-  filterUsers: ({ page = 1, limit = 10, gender, search }: UserFilterTypes) => {
+  filterUsers: ({ page = 1, limit = 10, genders, search }: UserFilterTypes) => {
     let users = get().users ?? [];
-    const genderArray = gender ? gender.split(".") : [];
+    const genderArray = genders ? genders.split(".") : [];
 
     if (genderArray.length > 0) {
-      users = users.filter((user) =>
-        genderArray.includes(user.gender.toLowerCase())
-      );
+      users = users.filter((user) => genderArray.includes(user.gender));
     }
 
     if (search) {

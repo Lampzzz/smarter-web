@@ -124,7 +124,7 @@ export interface newAdminProps {
 export interface UserFilterTypes {
   page?: number;
   limit?: number;
-  gender?: string;
+  genders?: string;
   search?: string;
 }
 

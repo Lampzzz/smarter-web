@@ -65,7 +65,10 @@ export default function ShelterForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const response = await createShelter(values);
+      const response = await createShelter({
+        ...values,
+        capacity: Number(values.capacity),
+      });
 
       if (!response.success) {
         console.log("error");

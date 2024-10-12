@@ -66,6 +66,7 @@ export default function Overview() {
             </Card>
           ))}
         </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7"></div>
       </div>
     </PageContainer>
   );

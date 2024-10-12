@@ -38,6 +38,8 @@ const useShelterStore = create<ShelterStore>((set, get) => ({
     let shelters = get().shelters ?? [];
     const statusArray = status ? status.split(".") : [];
 
+    console.log(statusArray);
+
     if (statusArray.length > 0) {
       shelters = shelters.filter((shelter) =>
         statusArray.includes(shelter.status)
