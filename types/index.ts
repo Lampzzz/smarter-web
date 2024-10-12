@@ -82,11 +82,19 @@ export interface FirebaseErrors {
   general?: FieldErrorMessage;
 }
 
+export interface CurrentUser {
+  id?: string;
+  name: string;
+  email: string;
+  authId: string;
+}
+
 export interface AuthStore {
-  currentUser: FirebaseUser | null;
+  currentUser: CurrentUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   initializeAuthListener: () => () => void;
+  fetchUserData: (id: string) => Promise<void>;
 }
 
 export interface ShelterStore {

@@ -5,11 +5,13 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
+  where,
 } from "firebase/firestore";
 
 import { db } from "./config";
-import { Shelter, UserForm, newAdminProps } from "@/types";
+import { CurrentUser, Shelter, UserForm, newAdminProps } from "@/types";
 import { formatBirthDate } from "@/lib/utils";
 
 // Create new admin
@@ -22,6 +24,26 @@ export const newAdmin = async (data: newAdminProps) => {
     });
   } catch (error: any) {
     console.error(error);
+  }
+};
+
+export const getAdmin = async (id: string) => {
+  try {
+    const adminsRef = collection(db, "admins");
+    const q = query(adminsRef, where("authId", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) return null;
+
+    const adminData = querySnapshot.docs[0].data() as CurrentUser;
+
+    return {
+      id: querySnapshot.docs[0].id,
+      ...adminData,
+    };
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };
 

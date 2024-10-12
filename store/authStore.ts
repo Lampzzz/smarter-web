@@ -3,6 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
 import { AuthStore } from "@/types";
+import { getAdmin } from "@/firebase/firestore";
 
 const useAuthStore = create<AuthStore>((set, get) => ({
   currentUser: null,
@@ -16,9 +17,10 @@ const useAuthStore = create<AuthStore>((set, get) => ({
       if (userAuth) {
         set({
           isAuthenticated: true,
-          currentUser: userAuth,
           isLoading: false,
         });
+
+        get().fetchUserData(userAuth.uid);
       } else {
         set({
           isAuthenticated: false,
@@ -29,6 +31,16 @@ const useAuthStore = create<AuthStore>((set, get) => ({
     });
 
     return unsubscribe;
+  },
+
+  fetchUserData: async (id: string) => {
+    const userData = await getAdmin(id);
+    if (userData) {
+      set({ currentUser: userData });
+    } else {
+      console.warn(`No user found with authId: ${id}`);
+      set({ currentUser: null });
+    }
   },
 }));
 
