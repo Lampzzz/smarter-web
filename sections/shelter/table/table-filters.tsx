@@ -5,7 +5,7 @@ import { useQueryState } from "nuqs";
 import { useCallback, useMemo } from "react";
 
 export const STATUS_OPTIONS = [
-  { value: "used", label: "Used" },
+  { value: "occupied", label: "Occupied" },
   { value: "available", label: "Available" },
   { value: "maintenance", label: "Maintenance" },
 ];
