@@ -1,6 +1,6 @@
 import ShelterUpdateForm from "@/sections/shelter/updateForm";
 import { Breadcrumbs } from "@/components/Breadcrumb";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import PageContainer from "@/components/layout/page-container";
 
 export const metadata = {
   title: "Update Shelter",
@@ -18,11 +18,11 @@ export default function ShelterViewPage({
   params: { id: string };
 }) {
   return (
-    <ScrollArea className="h-full">
-      <div className="flex-1 space-y-4 p-8">
+    <PageContainer scrollable={true}>
+      <div className="flex-1 space-y-4 py-8">
         <Breadcrumbs items={breadcrumbItems} />
         <ShelterUpdateForm id={params.id} />
       </div>
-    </ScrollArea>
+    </PageContainer>
   );
 }

@@ -6,7 +6,17 @@ import { House, Users } from "lucide-react";
 import PageContainer from "@/components/layout/page-container";
 import useShelterStore from "@/store/shelterStore";
 import useUserstore from "@/store/userStore";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { RecentTenant } from "./recent-tenant";
+import { PieGraph } from "./pie-graph";
+import { AreaGraph } from "./area-graph";
+import { BarGraph } from "./bar-graph";
 
 export default function Overview() {
   const { totalData: userTotalCount, fetchUsers } = useUserstore();
@@ -66,7 +76,28 @@ export default function Overview() {
             </Card>
           ))}
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7"></div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <div className="col-span-4">
+            <BarGraph />
+          </div>
+          <Card className="col-span-4 md:col-span-3">
+            <CardHeader>
+              <CardTitle>Recent Tenant</CardTitle>
+              <CardDescription>
+                You added 265 tenants this month.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <RecentTenant />
+            </CardContent>
+          </Card>
+          <div className="col-span-4">
+            <AreaGraph />
+          </div>
+          <div className="col-span-4 md:col-span-3">
+            <PieGraph />
+          </div>
+        </div>
       </div>
     </PageContainer>
   );

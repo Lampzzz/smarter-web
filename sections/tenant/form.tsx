@@ -87,12 +87,13 @@ export default function UserForm() {
         ...values,
         dateOfBirth: format(values.dateOfBirth, "yyyy-MM-dd"),
       });
-      form.reset();
 
       toast({
         title: "User created",
         description: "User created successfully",
       });
+
+      form.reset();
     } catch (error) {
       console.error(error);
     } finally {

@@ -27,15 +27,15 @@ export function UserNav() {
     router.replace("/login");
   };
 
-  console.log(currentUser);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={images.avatar} alt="Jake The Dog" />
-            {/* <AvatarFallback>{session.user?.name?.[0]}</AvatarFallback> */}
+            {/* <AvatarImage src={images.avatar} alt="Jake The Dog" /> */}
+            <AvatarFallback>
+              {currentUser?.name.split("")[0].toUpperCase()}
+            </AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

@@ -1,10 +1,12 @@
 import {
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
+  orderBy,
   query,
   setDoc,
   where,
@@ -50,7 +52,8 @@ export const getAdmin = async (id: string) => {
 // Fetch all shelters
 export const getAllShelters = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, "shelters"));
+    const q = query(collection(db, "shelters"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
     const data: Shelter[] = querySnapshot.docs.map(
       (doc) =>
         ({
@@ -87,7 +90,8 @@ export const getShelter = async (id: string) => {
 // Fetch all users
 export const getAllUsers = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, "users"));
+    const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => {
       return {
         id: doc.id,
@@ -138,6 +142,7 @@ export const createShelter = async (data: Shelter) => {
       type: data.type,
       capacity: data.capacity,
       status: data.status,
+      createdAt: Timestamp.now(),
     });
 
     return { success: true };
@@ -172,6 +177,7 @@ export const createUser = async (data: UserForm) => {
     await addDoc(collection(db, "users"), {
       ...data,
       age: formatBirthDate(data.dateOfBirth),
+      createdAt: Timestamp.now(),
     });
   } catch (error) {
     console.error(error);
