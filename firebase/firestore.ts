@@ -13,7 +13,7 @@ import {
 } from "firebase/firestore";
 
 import { db } from "./config";
-import { CurrentUser, Shelter, UserForm, newAdminProps } from "@/types";
+import { CurrentUser, Shelter, User, newAdminProps } from "@/types";
 import { formatBirthDate } from "@/lib/utils";
 
 // Create new admin
@@ -95,15 +95,12 @@ export const getAllUsers = async () => {
     const data = querySnapshot.docs.map((doc) => {
       return {
         id: doc.id,
-        fullName: `${doc.data().firstName} ${doc.data().middleName} ${
-          doc.data().lastName
-        }`,
+        fullName: doc.data().fullName,
         age: formatBirthDate(doc.data().dateOfBirth),
         phoneNumber: doc.data().phoneNumber,
         email: doc.data().email,
         gender: doc.data().gender,
         address: doc.data().address,
-        picture: doc.data().picture,
       };
     });
     return data;
@@ -172,7 +169,7 @@ export const deleteShelter = async (id: string) => {
 };
 
 // Create New User
-export const createUser = async (data: UserForm) => {
+export const createUser = async (data: User) => {
   try {
     await addDoc(collection(db, "users"), {
       ...data,
@@ -185,7 +182,7 @@ export const createUser = async (data: UserForm) => {
 };
 
 // Update shelter
-export const updateUser = async (data: Omit<UserForm, "id">, id: string) => {
+export const updateUser = async (data: User, id: string) => {
   try {
     const ref = doc(db, "users", id);
     await setDoc(ref, data);

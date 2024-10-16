@@ -11,18 +11,31 @@ import {
 const useShelterStore = create<ShelterStore>((set, get) => ({
   shelters: [],
   filteredShelters: [],
+  availableShelters: [],
   totalData: 0,
   shelter: null,
   isLoading: false,
 
+  getStatusType: () => {
+    const shelters = get().shelters;
+    const availableData = shelters?.filter(
+      (shelter) => shelter.status === "available"
+    );
+
+    set({ availableShelters: availableData });
+  },
+
   async fetchShelters() {
     try {
       const data = await getAllShelters();
+
       set({
         isLoading: false,
         shelters: data,
         totalData: data.length,
       });
+
+      get().getStatusType();
       get().filterShelters({ page: 1, limit: 10 });
     } catch (error) {
       set({ isLoading: false });
@@ -37,8 +50,6 @@ const useShelterStore = create<ShelterStore>((set, get) => ({
   }: ShelterFilterTypes) => {
     let shelters = get().shelters ?? [];
     const statusArray = status ? status.split(".") : [];
-
-    console.log(statusArray);
 
     if (statusArray.length > 0) {
       shelters = shelters.filter((shelter) =>

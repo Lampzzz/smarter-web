@@ -47,28 +47,15 @@ export interface Shelter {
   status: ShelterStatus;
 }
 
-export interface UserForm {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  middleName?: string;
-  email: string;
-  phoneNumber: string;
-  gender: Gender;
-  dateOfBirth: string;
-  age?: number;
-  address: string;
-}
-
 export interface User {
-  id: string;
+  id?: string;
   fullName: string;
   email?: string;
   phoneNumber?: string;
   gender: string;
-  age: number;
+  dateOfBirth: string;
+  age?: number;
   address: string;
-  picture?: string;
 }
 
 export interface FieldErrorMessage {
@@ -103,6 +90,8 @@ export interface ShelterStore {
   shelter: Shelter | null;
   isLoading: boolean;
   totalData: number;
+  availableShelters: Shelter[] | null;
+  getStatusType: () => void;
   fetchShelters: () => Promise<void>;
   filterShelters: (filters: ShelterFilterTypes) => void;
   fetchShelter: (id: string) => Promise<void>;
@@ -112,7 +101,7 @@ export interface ShelterStore {
 
 export interface UserStore {
   users: User[] | null;
-  user: UserForm | null;
+  user: User | null;
   totalData: number;
   filteredUsers: User[];
   isLoading: boolean;
