@@ -2,22 +2,22 @@ import * as z from "zod";
 
 export const userSchema = z.object({
   fullName: z.string().min(1, {
-    message: "Full name is required.",
+    message: "Required.",
   }),
   address: z.string().min(1, {
-    message: "Address is required.",
+    message: "Required.",
   }),
   email: z.string().min(1, {
-    message: "Email is required.",
+    message: "Required.",
   }),
   phoneNumber: z.string().min(1, {
-    message: "Phone number is required.",
+    message: "Required.",
   }),
   dateOfBirth: z.date({
-    required_error: "A date of birth is required.",
+    required_error: "Required.",
   }),
-  gender: z.enum(["male", "female"], {
-    required_error: "Please select a gender.",
+  gender: z.string().min(1, {
+    message: "Required.",
   }),
   password: z
     .string()
@@ -38,13 +38,13 @@ export const userSchema = z.object({
   members: z.array(
     z.object({
       fullName: z.string().min(1, {
-        message: "Member full name is required.",
+        message: "Required.",
       }),
-      birthDate: z.date({
-        required_error: "Member birth date is required.",
+      dateOfBirth: z.date({
+        required_error: "Required.",
       }),
-      gender: z.enum(["male", "female"], {
-        required_error: "Please select a member gender.",
+      gender: z.string().min(1, {
+        message: "Required.",
       }),
     })
   ),
