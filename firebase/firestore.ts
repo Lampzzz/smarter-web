@@ -1,3 +1,4 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import {
   Timestamp,
   addDoc,
@@ -12,11 +13,17 @@ import {
   where,
 } from "firebase/firestore";
 
-import { db } from "./config";
-import { CurrentUser, Shelter, User, newAdminProps } from "@/types";
 import { formatBirthDate } from "@/lib/utils";
+import { auth, db } from "./config";
+import {
+  CurrentUser,
+  Member,
+  Resident,
+  Shelter,
+  User,
+  newAdminProps,
+} from "@/types";
 
-// Create new admin
 export const newAdmin = async (data: newAdminProps) => {
   try {
     await addDoc(collection(db, "admins"), {
@@ -49,7 +56,6 @@ export const getAdmin = async (id: string) => {
   }
 };
 
-// Fetch all shelters
 export const getAllShelters = async () => {
   try {
     const q = query(collection(db, "shelters"), orderBy("createdAt", "desc"));
@@ -69,7 +75,6 @@ export const getAllShelters = async () => {
   }
 };
 
-// Get a single shelter
 export const getShelter = async (id: string) => {
   try {
     const ref = doc(db, "shelters", id);
@@ -87,16 +92,15 @@ export const getShelter = async (id: string) => {
   }
 };
 
-// Fetch all users
 export const getAllUsers = async () => {
   try {
-    const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
+    const q = query(collection(db, "managers"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
     const data = querySnapshot.docs.map((doc) => {
       return {
         id: doc.id,
         fullName: doc.data().fullName,
-        age: formatBirthDate(doc.data().dateOfBirth),
+        age: doc.data().age,
         phoneNumber: doc.data().phoneNumber,
         email: doc.data().email,
         gender: doc.data().gender,
@@ -110,7 +114,6 @@ export const getAllUsers = async () => {
   }
 };
 
-// Get a single user
 export const getUser = async (id: string) => {
   try {
     const ref = doc(db, "users", id);
@@ -128,7 +131,6 @@ export const getUser = async (id: string) => {
   }
 };
 
-// Insert new shelter
 export const createShelter = async (data: Shelter) => {
   try {
     const ref = collection(db, "shelters");
@@ -148,7 +150,6 @@ export const createShelter = async (data: Shelter) => {
   }
 };
 
-// Update shelter
 export const updateShelter = async (data: Shelter, id: string) => {
   try {
     const ref = doc(db, "shelters", id);
@@ -159,7 +160,6 @@ export const updateShelter = async (data: Shelter, id: string) => {
   }
 };
 
-// Delete Shelter
 export const deleteShelter = async (id: string) => {
   try {
     await deleteDoc(doc(db, "shelters", id));
@@ -168,20 +168,30 @@ export const deleteShelter = async (id: string) => {
   }
 };
 
-// Create New User
-export const createUser = async (data: User) => {
+export const createResident = async (data: Resident) => {
   try {
-    await addDoc(collection(db, "users"), {
-      ...data,
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      data.email,
+      data.password!
+    );
+
+    const { members, password, ...managerData } = data;
+
+    const managerDocRef = await addDoc(collection(db, "managers"), {
+      ...managerData,
+      auth_id: userCredential.user.uid,
       age: formatBirthDate(data.dateOfBirth),
       createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
     });
+
+    await createMember(members, managerDocRef.id);
   } catch (error) {
     console.error(error);
   }
 };
 
-// Update shelter
 export const updateUser = async (data: User, id: string) => {
   try {
     const ref = doc(db, "users", id);
@@ -191,10 +201,27 @@ export const updateUser = async (data: User, id: string) => {
   }
 };
 
-// Delete User
 export const deleteUser = async (id: string) => {
   try {
     await deleteDoc(doc(db, "users", id));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createMember = async (data: Member[], holderId: string) => {
+  try {
+    const promises = data.map(async (value) => {
+      return addDoc(collection(db, "members"), {
+        ...value,
+        age: formatBirthDate(value.dateOfBirth),
+        holderId,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      });
+    });
+
+    await Promise.all(promises);
   } catch (error) {
     console.error(error);
   }

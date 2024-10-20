@@ -11,18 +11,31 @@ export const navItems: NavItem[] = [
     title: "Shelter",
     href: "/dashboard/shelter",
     icon: "house",
-    label: "shelter",
+    label: "Shelter",
   },
   {
-    title: "Tenant",
-    href: "/dashboard/tenant",
-    icon: "user",
-    label: "tenant",
+    title: "Resident",
+    icon: "users",
+    label: "Resident",
+    children: [
+      {
+        title: "Manager",
+        href: "/dashboard/tenant",
+        icon: "userCheck",
+        label: "Manager",
+      },
+      {
+        title: "Member",
+        href: "/dashboard/tenant/member",
+        icon: "user",
+        label: "Member",
+      },
+    ],
   },
   {
     title: "Message",
     href: "/dashboard/message",
     icon: "mail",
-    label: "message",
+    label: "Message",
   },
 ];

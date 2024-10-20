@@ -1,18 +1,11 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { format } from "date-fns";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
-import { useParams, useRouter } from "next/navigation";
-import {
-  AlertTriangleIcon,
-  Trash,
-  Trash2Icon,
-  CalendarIcon,
-} from "lucide-react";
+import { AlertTriangleIcon, Trash2Icon, CalendarIcon } from "lucide-react";
 
-import useShelterStore from "@/store/shelterStore";
 import { cn } from "@/lib/utils";
 import { userSchema, type UserFormValues } from "@/lib/form-schema";
 import { Separator } from "@/components/ui/separator";
@@ -46,42 +39,19 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
-interface UserFormType {
-  initialData: any | null;
-  categories: any;
-}
-
-interface MemberOpenState {
-  [index: number]: boolean;
-}
-
-interface Member {
-  fullName: string;
-  dateOfBirth: any;
-  gender: string;
-}
-
-interface ResidentFormValues {
-  fullName: string;
-  dateOfBirth: any;
-  gender: string;
-  address: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  members: Member[];
-}
+import { createResident } from "@/firebase/firestore";
+import { useToast } from "@/hooks/useToast";
+import { MemberOpenState, Resident } from "@/types";
 
 export default function UserForm() {
-  const params = useParams();
-  const router = useRouter();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [memberOpen, setMemberOpen] = useState<MemberOpenState>({});
   const [loading, setLoading] = useState(false);
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  const [data, setData] = useState<ResidentFormValues>({});
+  const [data, setData] = useState<Resident>({} as any);
+
   const defaultValues = {
     members: [
       {
@@ -109,7 +79,6 @@ export default function UserForm() {
   });
 
   const processForm: SubmitHandler<UserFormValues> = (data) => {
-    console.log("data ==>", data);
     setData(data);
   };
 
@@ -167,8 +136,23 @@ export default function UserForm() {
     }
   };
 
-  const onSubmit = (data: UserFormValues) => {
-    console.log(data);
+  const onSubmit = async () => {
+    setLoading(true);
+
+    try {
+      await createResident(data);
+
+      toast({
+        title: "User created",
+        description: "User created successfully",
+      });
+
+      form.reset();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -262,7 +246,7 @@ export default function UserForm() {
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
                             {field.value ? (
-                              format(field.value, "PPP")
+                              format(field.value, "MMMM d, yyyy")
                             ) : (
                               <span>Select birth date</span>
                             )}
@@ -450,7 +434,7 @@ export default function UserForm() {
                                     >
                                       <CalendarIcon className="mr-2 h-4 w-4" />
                                       {field.value ? (
-                                        format(field.value, "PPP")
+                                        format(field.value, "MMMM d, yyyy")
                                       ) : (
                                         <span>Select birth date</span>
                                       )}
@@ -553,7 +537,10 @@ export default function UserForm() {
                 </div>
                 <div>
                   <FormLabel>Date of birth</FormLabel>
-                  <Input value={data.dateOfBirth} readOnly />
+                  <Input
+                    value={format(data.dateOfBirth, "MMMM d, yyyy")}
+                    readOnly
+                  />
                 </div>
                 <div>
                   <FormLabel>Gender</FormLabel>
@@ -572,8 +559,6 @@ export default function UserForm() {
                   <Input value={data.phoneNumber} readOnly />
                 </div>
 
-                {/* <Separator className="col-span-full" /> */}
-
                 <div className="col-span-full">
                   <h2 className="text-lg font-bold tracking-tight">
                     Members Information
@@ -588,7 +573,10 @@ export default function UserForm() {
                     </div>
                     <div>
                       <FormLabel>Date of birth</FormLabel>
-                      <Input value={member.dateOfBirth} readOnly />
+                      <Input
+                        value={format(member.dateOfBirth, "MMMM d, yyyy")}
+                        readOnly
+                      />
                     </div>
                     <div>
                       <FormLabel>Gender</FormLabel>
@@ -596,6 +584,16 @@ export default function UserForm() {
                     </div>
                   </Fragment>
                 ))}
+
+                <Button
+                  disabled={loading}
+                  onClick={onSubmit}
+                  className="mx-auto col-span-full"
+                  type="submit"
+                  size={"lg"}
+                >
+                  Submit
+                </Button>
               </>
             )}
           </div>

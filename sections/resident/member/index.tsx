@@ -2,20 +2,19 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import PageContainer from "@/components/layout/page-container";
-import UserTable from "./table";
-import ManagerCount from "./table/count";
 import { Breadcrumbs } from "@/components/Breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
 import { cn } from "@/lib/utils";
+import UserCount from "../../tenant/table/count";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Manager", link: "/dashboard/tenant" },
+  { title: "Member", link: "/dashboard/tenant/member" },
 ];
 
-export default async function UsersListingPage() {
+export default async function MemberListingPage() {
   const page = searchParamsCache.get("page");
   const search = searchParamsCache.get("q");
   const pageLimit = searchParamsCache.get("limit");
@@ -33,7 +32,7 @@ export default async function UsersListingPage() {
       <div className="space-y-4">
         <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">
-          <ManagerCount />
+          <UserCount />
           <Link
             href={"/dashboard/tenant/new"}
             className={cn(buttonVariants({ variant: "default" }))}
@@ -42,7 +41,6 @@ export default async function UsersListingPage() {
           </Link>
         </div>
         <Separator />
-        <UserTable filters={filters} />
       </div>
     </PageContainer>
   );

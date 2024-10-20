@@ -1,4 +1,3 @@
-import { User as FirebaseUser } from "firebase/auth";
 import {
   FieldError,
   FieldErrorsImpl,
@@ -21,6 +20,7 @@ export interface NavItem {
   icon?: keyof typeof Icons;
   label?: string;
   description?: string;
+  children?: NavItem[];
 }
 
 export interface FormData {
@@ -34,8 +34,8 @@ export interface FormFieldProps {
   placeholder: string;
   name: ValidFieldNames;
   icon?: string;
-  register: UseFormRegister<FormData>;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
+  register: UseFormRegister<FormData>;
 }
 
 export interface Shelter {
@@ -56,6 +56,44 @@ export interface User {
   dateOfBirth: string;
   age?: number;
   address: string;
+  password?: string;
+}
+
+export interface Resident {
+  id?: string;
+  fullName: string;
+  email: string;
+  phoneNumber?: string;
+  gender: string;
+  dateOfBirth: any;
+  age?: number;
+  address: string;
+  password?: string;
+  members: Member[];
+}
+
+export interface Member {
+  id?: string;
+  fullName: string;
+  gender: string;
+  dateOfBirth: any;
+  age?: number;
+  managerId?: string;
+}
+
+export interface MemberOpenState {
+  [index: number]: boolean;
+}
+
+export interface ResidentFormValues {
+  fullName: string;
+  dateOfBirth: any;
+  gender: string;
+  address: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
+  members: Member[];
 }
 
 export interface FieldErrorMessage {
@@ -74,6 +112,27 @@ export interface CurrentUser {
   name: string;
   email: string;
   authId: string;
+}
+
+export interface Admin {
+  id?: string;
+  name: string;
+  email: string;
+  authId: string;
+}
+
+export interface UserFilterTypes {
+  page?: number;
+  limit?: number;
+  genders?: string;
+  search?: string;
+}
+
+export interface ShelterFilterTypes {
+  page?: number;
+  limit?: number;
+  status?: string;
+  search?: string;
 }
 
 export interface AuthStore {
@@ -112,22 +171,9 @@ export interface UserStore {
   handleUpdate: (data: User, id: string) => Promise<void>;
 }
 
-export interface newAdminProps {
-  name: string;
-  email: string;
-  authId: string;
-}
-
-export interface UserFilterTypes {
-  page?: number;
-  limit?: number;
-  genders?: string;
-  search?: string;
-}
-
-export interface ShelterFilterTypes {
-  page?: number;
-  limit?: number;
-  status?: string;
-  search?: string;
+export interface MemberState {
+  members: Member[] | null;
+  totalData: number;
+  isLoading: boolean;
+  fetchMembers: () => Promise<void>;
 }

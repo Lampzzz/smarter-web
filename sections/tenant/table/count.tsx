@@ -3,10 +3,13 @@
 import { Heading } from "@/components/Heading";
 import useUserStore from "@/store/userStore";
 
-export default function UserCount() {
+export default function ManagerCount() {
   const { totalData } = useUserStore();
 
   return (
-    <Heading title={`Tenant (${totalData})`} description="Manage tenant" />
+    <Heading
+      title={`Shelter Manager (${totalData})`}
+      description="Manage shelter manager"
+    />
   );
 }
