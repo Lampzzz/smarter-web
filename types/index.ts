@@ -79,6 +79,7 @@ export interface Member {
   dateOfBirth: any;
   age?: number;
   managerId?: string;
+  managerName: string;
 }
 
 export interface MemberOpenState {
@@ -175,5 +176,5 @@ export interface MemberState {
   members: Member[] | null;
   totalData: number;
   isLoading: boolean;
-  fetchMembers: () => Promise<void>;
+  fetchMembers: (filters: UserFilterTypes) => void;
 }

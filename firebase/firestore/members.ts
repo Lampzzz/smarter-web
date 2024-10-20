@@ -14,7 +14,8 @@ import {
 
 import { db } from "../config";
 import { formatBirthDate } from "@/lib/utils";
-import { Member } from "@/types";
+import { Member, User } from "@/types";
+import { getManagerById } from "./manager";
 
 export const createMembers = async (data: Member[], managerId: string) => {
   try {
@@ -38,14 +39,20 @@ export const getMembers = async () => {
   try {
     const q = query(collection(db, "members"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
-    const data = querySnapshot.docs.map((doc) => {
-      return {
-        id: doc.id,
-        ...doc.data(),
-      };
-    });
 
-    return data;
+    const data = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const manager = (await getManagerById(doc.data().managerId)) as User;
+
+        return {
+          id: doc.id,
+          ...doc.data(),
+          managerName: manager ? manager.fullName : "",
+        };
+      })
+    );
+
+    return data as Member[];
   } catch (error) {
     console.error(error);
     return [];

@@ -15,16 +15,10 @@ import {
 
 import { formatBirthDate } from "@/lib/utils";
 import { auth, db } from "./config";
-import {
-  CurrentUser,
-  Member,
-  Resident,
-  Shelter,
-  User,
-  newAdminProps,
-} from "@/types";
+import { CurrentUser, Member, Resident, Shelter, User, Admin } from "@/types";
+import { createMembers } from "./firestore/members";
 
-export const newAdmin = async (data: newAdminProps) => {
+export const newAdmin = async (data: Admin) => {
   try {
     await addDoc(collection(db, "admins"), {
       name: data.name,
@@ -182,11 +176,12 @@ export const createResident = async (data: Resident) => {
       ...managerData,
       auth_id: userCredential.user.uid,
       age: formatBirthDate(data.dateOfBirth),
+      isAssigned: false,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
 
-    await createMember(members, managerDocRef.id);
+    await createMembers(members, managerDocRef.id);
   } catch (error) {
     console.error(error);
   }
@@ -204,24 +199,6 @@ export const updateUser = async (data: User, id: string) => {
 export const deleteUser = async (id: string) => {
   try {
     await deleteDoc(doc(db, "users", id));
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const createMember = async (data: Member[], holderId: string) => {
-  try {
-    const promises = data.map(async (value) => {
-      return addDoc(collection(db, "members"), {
-        ...value,
-        age: formatBirthDate(value.dateOfBirth),
-        holderId,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-      });
-    });
-
-    await Promise.all(promises);
   } catch (error) {
     console.error(error);
   }
