@@ -20,7 +20,7 @@ export const navItems: NavItem[] = [
     children: [
       {
         title: "Manager",
-        href: "/dashboard/tenant",
+        href: "/dashboard/resident/manager",
         icon: "userCheck",
         label: "Manager",
       },

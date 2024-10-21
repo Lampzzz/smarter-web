@@ -51,7 +51,7 @@ const ShelterTable = ({ filters }: { filters: ShelterFilterTypes }) => {
       </div>
       <DataTable
         columns={columns}
-        data={shelters!}
+        data={shelters ?? []}
         totalItems={totalData}
         isLoading={isLoading}
       />

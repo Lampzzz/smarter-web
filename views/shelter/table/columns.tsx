@@ -41,6 +41,10 @@ export const columns: ColumnDef<Shelter>[] = [
     header: "Status",
   },
   {
+    accessorKey: "managerName",
+    header: "Manager",
+  },
+  {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,
   },

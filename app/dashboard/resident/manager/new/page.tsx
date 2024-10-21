@@ -1,18 +1,18 @@
-import UserForm from "@/sections/tenant/form";
+import UserForm from "@/views/resident/manager/form";
 import { Breadcrumbs } from "@/components/Breadcrumb";
 import PageContainer from "@/components/layout/page-container";
 
 export const metadata = {
-  title: "New Tenant",
+  title: "New Resident",
 };
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Tenant", link: "/dashboard/tenant" },
-  { title: "Create", link: "/dashboard/tenant/create" },
+  { title: "Resident", link: "/dashboard/resident" },
+  { title: "Create", link: "/dashboard/resident/create" },
 ];
 
-export default function EmployeeViewPage() {
+export default function ManagerViewPage() {
   return (
     <PageContainer scrollable={true}>
       <div className="flex-1 space-y-4">

@@ -44,9 +44,10 @@ export interface Shelter {
   name: string;
   location: string;
   type: ShelterType;
-  capacity: number;
+  capacity: number | string;
   status: ShelterStatus;
-  managerId?: string;
+  managerId: string | null;
+  managerName?: string | null;
 }
 
 export interface Manager {
@@ -141,7 +142,7 @@ export interface ShelterFilterTypes {
   search?: string;
 }
 
-export interface AuthStore {
+export interface AuthState {
   currentUser: CurrentUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;

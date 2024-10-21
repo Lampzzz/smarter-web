@@ -1,4 +1,4 @@
-import UsersListingPage from "@/views/tenant";
+import ListingPage from "@/views/resident/manager";
 import { SearchParams } from "nuqs/parsers";
 import { searchParamsCache } from "@/lib/searchparams";
 
@@ -7,11 +7,11 @@ type PageProps = {
 };
 
 export const metadata = {
-  title: "Manager",
+  title: "Shelter Manager",
 };
 
-export default function Shelter({ searchParams }: PageProps) {
+export default function Manager({ searchParams }: PageProps) {
   searchParamsCache.parse(searchParams);
 
-  return <UsersListingPage />;
+  return <ListingPage />;
 }

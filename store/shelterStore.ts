@@ -2,12 +2,11 @@ import { create } from "zustand";
 
 import { ShelterFilterTypes, ShelterState } from "@/types";
 import {
-  deleteShelter,
-  getAllShelters,
-  getShelter,
+  deleteShelterById,
+  getShelterById,
+  getShelters,
   updateShelter,
-} from "@/firebase/firestore";
-import { getShelters } from "@/firebase/firestore/shelter";
+} from "@/firebase/firestore/shelter";
 
 const useShelterStore = create<ShelterState>((set, get) => ({
   shelters: [],
@@ -47,18 +46,10 @@ const useShelterStore = create<ShelterState>((set, get) => ({
 
   fetchShelter: async (id: string) => {
     try {
-      const data = await getShelter(id);
+      const data = await getShelterById(id);
 
       if (data) {
-        set({
-          shelter: {
-            name: data.name,
-            location: data.location,
-            type: data.type,
-            capacity: data.capacity,
-            status: data.status,
-          },
-        });
+        set({ shelter: data });
       }
     } catch (error) {
       console.error(error);
@@ -81,7 +72,7 @@ const useShelterStore = create<ShelterState>((set, get) => ({
 
   handleDelete: async (id: string) => {
     try {
-      await deleteShelter(id);
+      await deleteShelterById(id);
       await get().fetchShelters();
     } catch (error) {
       console.error(error);

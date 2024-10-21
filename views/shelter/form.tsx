@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import * as z from "zod";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -76,14 +76,12 @@ export default function ShelterForm() {
       const response = await createShelter({
         ...values,
         capacity: Number(values.capacity),
-        managerId: values.managerId === "none" ? "" : values.managerId,
+        managerId: values.managerId === "none" ? null : values.managerId,
       });
 
       if (!response.success) {
         console.log("error");
       }
-
-      alert(JSON.stringify(values, null, 2));
 
       form.reset();
 

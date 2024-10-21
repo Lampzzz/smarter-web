@@ -2,10 +2,10 @@ import { create } from "zustand";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
-import { AuthStore } from "@/types";
-import { getAdmin } from "@/firebase/firestore";
+import { AuthState } from "@/types";
+import { getAdminById } from "@/firebase/firestore/admin";
 
-const useAuthStore = create<AuthStore>((set, get) => ({
+const useAuthStore = create<AuthState>((set, get) => ({
   currentUser: null,
   isAuthenticated: false,
   isLoading: true,
@@ -34,7 +34,7 @@ const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   fetchUserData: async (id: string) => {
-    const userData = await getAdmin(id);
+    const userData = await getAdminById(id);
     if (userData) {
       set({ currentUser: userData });
     } else {

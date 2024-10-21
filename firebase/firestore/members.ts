@@ -14,7 +14,7 @@ import {
 
 import { db } from "../config";
 import { formatBirthDate } from "@/lib/utils";
-import { Member, User } from "@/types";
+import { Member, Manager } from "@/types";
 import { getManagerById } from "./manager";
 
 export const createMembers = async (data: Member[], managerId: string) => {
@@ -42,7 +42,7 @@ export const getMembers = async () => {
 
     const data = await Promise.all(
       querySnapshot.docs.map(async (doc) => {
-        const manager = (await getManagerById(doc.data().managerId)) as User;
+        const manager = (await getManagerById(doc.data().managerId)) as Manager;
 
         return {
           id: doc.id,

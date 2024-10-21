@@ -10,17 +10,14 @@ import { DataTableSearch } from "@/components/ui/table/data-table-search";
 import { GENDER_OPTIONS, useUserTableFilters } from "./table-filters";
 import { columns } from "./columns";
 import { UserFilterTypes } from "@/types";
+import useManagerStore from "@/store/managerStore";
 
 export default function UserTable({ filters }: { filters: UserFilterTypes }) {
-  const { fetchUsers, filteredUsers, filterUsers, isLoading } = useUserstore();
+  const { fetchManagers, managers, isLoading, totalData } = useManagerStore();
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
-
-  useEffect(() => {
-    filterUsers(filters);
-  }, [filters, filterUsers]);
+    fetchManagers(filters);
+  }, [filters, fetchManagers]);
 
   const {
     genderFilter,
@@ -31,8 +28,6 @@ export default function UserTable({ filters }: { filters: UserFilterTypes }) {
     setPage,
     setSearchQuery,
   } = useUserTableFilters();
-
-  console.log(filters);
 
   return (
     <div className="space-y-4 ">
@@ -57,8 +52,8 @@ export default function UserTable({ filters }: { filters: UserFilterTypes }) {
       </div>
       <DataTable
         columns={columns}
-        data={filteredUsers}
-        totalItems={filteredUsers.length}
+        data={managers ?? []}
+        totalItems={totalData}
         isLoading={isLoading}
       />
     </div>

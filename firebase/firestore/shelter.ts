@@ -13,11 +13,14 @@ import {
 } from "firebase/firestore";
 
 import { db } from "../config";
-import { Shelter } from "@/types";
+import { Manager, Shelter } from "@/types";
+import { getManagerById } from "./manager";
 
 export const createShelter = async (data: Shelter) => {
   try {
     const ref = collection(db, "shelters");
+
+    console.log("Added data: ", data);
 
     await addDoc(ref, {
       ...data,
@@ -35,15 +38,20 @@ export const getShelters = async () => {
   try {
     const q = query(collection(db, "shelters"), orderBy("createdAt", "desc"));
     const querySnapshot = await getDocs(q);
-    const data: Shelter[] = querySnapshot.docs.map(
-      (doc) =>
-        ({
+
+    const data = await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        const manager = (await getManagerById(doc.data().managerId)) as Manager;
+
+        return {
           id: doc.id,
           ...doc.data(),
-        } as Shelter)
+          managerName: manager ? manager.fullName : null,
+        };
+      })
     );
 
-    return data;
+    return data as Shelter[];
   } catch (error) {
     console.error(error);
     return [];
@@ -71,9 +79,13 @@ export const updateShelter = async (data: Shelter, id: string) => {
   try {
     const ref = doc(db, "shelters", id);
 
-    await setDoc(ref, { ...data, updatedAt: Timestamp.now() });
+    await setDoc(ref, {
+      ...data,
+      managerId: data.managerId === "none" ? null : data.managerId,
+      updatedAt: Timestamp.now(),
+    });
   } catch (error: any) {
-    throw new Error(error);
+    console.error(error);
   }
 };
 

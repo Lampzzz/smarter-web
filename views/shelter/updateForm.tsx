@@ -23,11 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useManagerStore from "@/store/managerStore";
 
 export default function ShelterUpdateForm({ id }: { id: string }) {
+  const { unassignedManagers, fetchUnAssignedManager } = useManagerStore();
   const { shelter, fetchShelter, handleUpdate, isLoading } = useShelterStore();
   const { toast } = useToast();
-
   const form = useForm();
 
   useEffect(() => {
@@ -41,12 +42,19 @@ export default function ShelterUpdateForm({ id }: { id: string }) {
   useEffect(() => {
     if (shelter) {
       form.reset(shelter);
+      // alert(JSON.stringify(shelter, null, 2));
     }
   }, [shelter, form]);
+
+  useEffect(() => {
+    fetchUnAssignedManager();
+  }, []);
 
   const onSubmit = async (data: any) => {
     try {
       await handleUpdate(data, id);
+
+      // alert(JSON.stringify(data, null, 2));
 
       toast({
         title: "Shelter updated",
@@ -154,6 +162,31 @@ export default function ShelterUpdateForm({ id }: { id: string }) {
                       placeholder="Enter capacity (0-5)"
                       {...field}
                     />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="managerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Manager</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select manager" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {unassignedManagers?.map((shelter) => (
+                          <SelectItem key={shelter.id} value={shelter.id!}>
+                            {shelter?.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
