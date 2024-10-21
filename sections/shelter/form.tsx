@@ -89,7 +89,10 @@ export default function ShelterForm() {
     <Card className="mx-auto w-full">
       <CardHeader>
         <CardTitle className="text-left text-2xl font-bold">
-          Shelter Information
+          Create Shelter Information
+        </CardTitle>
+        <CardTitle className="text-left text-sm text-muted-foreground">
+          Fill in the necessary shelter details
         </CardTitle>
       </CardHeader>
       <CardContent>

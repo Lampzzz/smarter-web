@@ -7,6 +7,9 @@ export default function ShelterCount() {
   const { totalData } = useShelterStore();
 
   return (
-    <Heading title={`Shelter (${totalData})`} description="Manage shelter" />
+    <Heading
+      title={`Shelter (${totalData})`}
+      description="View and manage all aspects of shelter operations efficiently"
+    />
   );
 }

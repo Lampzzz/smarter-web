@@ -38,4 +38,10 @@ export const navItems: NavItem[] = [
     icon: "mail",
     label: "Message",
   },
+  {
+    title: "Settings",
+    href: "/dashboard/settings",
+    icon: "settings",
+    label: "Settings",
+  },
 ];
