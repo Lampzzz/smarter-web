@@ -4,17 +4,20 @@ import { useEffect } from "react";
 import { House, Users } from "lucide-react";
 
 import useShelterStore from "@/store/shelterStore";
-import useUserstore from "@/store/userStore";
+import useManagerStore from "@/store/managerStore";
+import useMemberStore from "@/store/memberStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function TotalData() {
-  const { totalData: userTotalCount, fetchUsers } = useUserstore();
   const { totalData: shelterTotalCount, fetchShelters } = useShelterStore();
+  const { totalData: managerTotalCount, fetchManagers } = useManagerStore();
+  const { totalData: memberTotalCount, fetchMembers } = useMemberStore();
 
   useEffect(() => {
-    fetchUsers();
+    fetchManagers();
     fetchShelters();
-  }, [fetchUsers, fetchShelters]);
+    fetchMembers();
+  }, [fetchManagers, fetchShelters, fetchMembers]);
 
   const cardData = [
     {
@@ -24,15 +27,15 @@ export default function TotalData() {
       icon: <House className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      title: "Total Users",
-      total: userTotalCount,
+      title: "Total Manager",
+      total: managerTotalCount,
       change: "+32 from last month",
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
     },
     {
-      title: "Test Data",
-      total: "+12,234",
-      change: "+19% from last month",
+      title: "Total Member",
+      total: memberTotalCount,
+      change: "+32 from last month",
       icon: <Users className="h-4 w-4 text-muted-foreground" />,
     },
     {

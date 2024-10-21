@@ -6,6 +6,7 @@ import {
 } from "react-hook-form";
 
 import { Icons } from "@/components/icons";
+import { Timestamp } from "firebase/firestore";
 
 export type ValidFieldNames = "name" | "email" | "password";
 export type ShelterStatus = "available" | "occupied" | "maintenance";
@@ -45,9 +46,10 @@ export interface Shelter {
   type: ShelterType;
   capacity: number;
   status: ShelterStatus;
+  managerId?: string;
 }
 
-export interface User {
+export interface Manager {
   id?: string;
   fullName: string;
   email?: string;
@@ -57,6 +59,9 @@ export interface User {
   age?: number;
   address: string;
   password?: string;
+  isAssigned?: boolean;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Resident {
@@ -144,37 +149,33 @@ export interface AuthStore {
   fetchUserData: (id: string) => Promise<void>;
 }
 
-export interface ShelterStore {
+export interface ShelterState {
   shelters: Shelter[] | null;
-  filteredShelters: Shelter[];
   shelter: Shelter | null;
-  isLoading: boolean;
   totalData: number;
-  availableShelters: Shelter[] | null;
-  getStatusType: () => void;
-  fetchShelters: () => Promise<void>;
-  filterShelters: (filters: ShelterFilterTypes) => void;
+  isLoading: boolean;
+  fetchShelters: (filters?: ShelterFilterTypes) => Promise<void>;
   fetchShelter: (id: string) => Promise<void>;
   handleDelete: (id: string) => Promise<void>;
   handleUpdate: (data: Shelter, id: string) => Promise<void>;
-}
-
-export interface UserStore {
-  users: User[] | null;
-  user: User | null;
-  totalData: number;
-  filteredUsers: User[];
-  isLoading: boolean;
-  fetchUsers: () => Promise<void>;
-  filterUsers: (filters: UserFilterTypes) => void;
-  handleDelete: (id: string) => Promise<void>;
-  fetchUser: (id: string) => Promise<void>;
-  handleUpdate: (data: User, id: string) => Promise<void>;
 }
 
 export interface MemberState {
   members: Member[] | null;
   totalData: number;
   isLoading: boolean;
-  fetchMembers: (filters: UserFilterTypes) => void;
+  fetchMembers: (filters?: UserFilterTypes) => Promise<void>;
+}
+
+export interface ManagerState {
+  managers: Manager[] | null;
+  manager: Manager | null;
+  unassignedManagers: Manager[] | null;
+  totalData: number;
+  isLoading: boolean;
+  fetchManagers: (filters?: UserFilterTypes) => Promise<void>;
+  fetchUser?: (id: string) => Promise<void>;
+  fetchUnAssignedManager: () => Promise<void>;
+  handleDelete?: (id: string) => Promise<void>;
+  handleUpdate?: (data: Resident, id: string) => Promise<void>;
 }

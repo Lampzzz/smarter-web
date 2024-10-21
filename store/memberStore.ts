@@ -8,30 +8,29 @@ const useMemberStore = create<MemberState>((set, get) => ({
   isLoading: false,
   totalData: 0,
 
-  async fetchMembers({
-    page = 1,
-    limit = 10,
-    genders,
-    search,
-  }: UserFilterTypes) {
+  async fetchMembers(filters?: UserFilterTypes) {
     set({ isLoading: true });
 
     try {
       const data = await getMembers();
       let members = data ?? [];
 
-      const genderArray = genders ? genders.split(".") : [];
+      if (filters) {
+        const genderArray = filters.genders ? filters.genders.split(".") : [];
 
-      if (genderArray.length > 0) {
-        members = members.filter((member) =>
-          genderArray.includes(member.gender)
-        );
-      }
+        if (genderArray.length > 0) {
+          members = members.filter((member) =>
+            genderArray.includes(member.gender)
+          );
+        }
 
-      if (search) {
-        members = members.filter((member) =>
-          member.fullName.toLowerCase().includes(search.toLowerCase())
-        );
+        if (filters.search) {
+          members = members.filter((member) =>
+            member.fullName
+              .toLowerCase()
+              .includes(filters.search!.toLowerCase())
+          );
+        }
       }
 
       set({ members: members, totalData: data.length });

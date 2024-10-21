@@ -20,11 +20,7 @@ export const createShelter = async (data: Shelter) => {
     const ref = collection(db, "shelters");
 
     await addDoc(ref, {
-      name: data.name,
-      location: data.location,
-      type: data.type,
-      capacity: data.capacity,
-      status: data.status,
+      ...data,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });

@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/managerStore";
 
 export function RecentTenant() {
   const { users } = useUserStore();

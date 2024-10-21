@@ -12,16 +12,11 @@ import { useShelterTableFilters, STATUS_OPTIONS } from "./table-filters";
 import { ShelterFilterTypes } from "@/types";
 
 const ShelterTable = ({ filters }: { filters: ShelterFilterTypes }) => {
-  const { filteredShelters, fetchShelters, filterShelters, isLoading } =
-    useShelterStore();
+  const { fetchShelters, isLoading, shelters, totalData } = useShelterStore();
 
   useEffect(() => {
-    fetchShelters();
-  }, [fetchShelters]);
-
-  useEffect(() => {
-    filterShelters(filters);
-  }, [filters, filterShelters]);
+    fetchShelters(filters);
+  }, [fetchShelters, filters]);
 
   const {
     statusFilter,
@@ -56,8 +51,8 @@ const ShelterTable = ({ filters }: { filters: ShelterFilterTypes }) => {
       </div>
       <DataTable
         columns={columns}
-        data={filteredShelters}
-        totalItems={filteredShelters.length}
+        data={shelters!}
+        totalItems={totalData}
         isLoading={isLoading}
       />
     </div>

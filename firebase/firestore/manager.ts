@@ -15,7 +15,7 @@ import {
 
 import { formatBirthDate } from "@/lib/utils";
 import { auth, db } from "../config";
-import { Resident, User } from "@/types";
+import { Manager, Resident } from "@/types";
 import { createMembers } from "./members";
 
 export const createResident = async (data: Resident) => {
@@ -52,7 +52,7 @@ export const getManagers = async () => {
         ...doc.data(),
       };
     });
-    return data;
+    return data as Manager[];
   } catch (error) {
     console.error(error);
     return [];
@@ -76,7 +76,18 @@ export const getManagerById = async (id: string) => {
   }
 };
 
-export const updateManager = async (data: User, id: string) => {
+export const getUnAssignedManager = async () => {
+  try {
+    const managers = await getManagers();
+    const data = managers.filter((manager) => !manager.isAssigned);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateManager = async (data: Resident, id: string) => {
   try {
     const ref = doc(db, "managers", id);
     await setDoc(ref, data);

@@ -1,7 +1,7 @@
 import { SearchParams } from "nuqs/parsers";
 
 import { searchParamsCache } from "@/lib/searchparams";
-import ShelterPage from "@/sections/shelter";
+import ShelterPage from "@/views/shelter";
 
 type PageProps = {
   searchParams: SearchParams;
@@ -9,7 +9,6 @@ type PageProps = {
 
 export const metadata = {
   title: "Shelter",
-  descriptin: "Manage shelter information",
 };
 
 export default function Shelter({ searchParams }: PageProps) {

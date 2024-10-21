@@ -1,69 +1,48 @@
 import { create } from "zustand";
 
-import { ShelterFilterTypes, ShelterStore } from "@/types";
+import { ShelterFilterTypes, ShelterState } from "@/types";
 import {
   deleteShelter,
   getAllShelters,
   getShelter,
   updateShelter,
 } from "@/firebase/firestore";
+import { getShelters } from "@/firebase/firestore/shelter";
 
-const useShelterStore = create<ShelterStore>((set, get) => ({
+const useShelterStore = create<ShelterState>((set, get) => ({
   shelters: [],
-  filteredShelters: [],
-  availableShelters: [],
   totalData: 0,
   shelter: null,
   isLoading: false,
 
-  getStatusType: () => {
-    const shelters = get().shelters;
-    const availableData = shelters?.filter(
-      (shelter) => shelter.status === "available"
-    );
+  async fetchShelters(filters?: ShelterFilterTypes) {
+    set({ isLoading: true });
 
-    set({ availableShelters: availableData });
-  },
-
-  async fetchShelters() {
     try {
-      const data = await getAllShelters();
+      const data = await getShelters();
+      let shelters = data ?? [];
 
-      set({
-        isLoading: false,
-        shelters: data,
-        totalData: data.length,
-      });
+      if (filters) {
+        const statusArray = filters.status ? filters.status.split(".") : [];
 
-      get().getStatusType();
-      get().filterShelters({ page: 1, limit: 10 });
+        if (statusArray.length > 0) {
+          shelters = shelters.filter((shelter) =>
+            statusArray.includes(shelter.status)
+          );
+        }
+
+        if (filters.search) {
+          shelters = shelters.filter((shelter) =>
+            shelter.name.toLowerCase().includes(filters.search!.toLowerCase())
+          );
+        }
+      }
+
+      set({ shelters: shelters, totalData: data.length });
     } catch (error) {
+    } finally {
       set({ isLoading: false });
     }
-  },
-
-  filterShelters: ({
-    page = 1,
-    limit = 10,
-    status,
-    search,
-  }: ShelterFilterTypes) => {
-    let shelters = get().shelters ?? [];
-    const statusArray = status ? status.split(".") : [];
-
-    if (statusArray.length > 0) {
-      shelters = shelters.filter((shelter) =>
-        statusArray.includes(shelter.status)
-      );
-    }
-
-    if (search) {
-      shelters = shelters.filter((shelter) =>
-        shelter.name.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    set({ filteredShelters: shelters });
   },
 
   fetchShelter: async (id: string) => {

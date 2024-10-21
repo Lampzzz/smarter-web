@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 
-import useUserStore from "@/store/userStore";
+import useUserStore from "@/store/managerStore";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

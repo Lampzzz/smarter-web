@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import useUserStore from "@/store/userStore";
-import { User } from "@/types";
+import useUserStore from "@/store/managerStore";
+import { Member } from "@/types";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface CellActionProps {
-  data: User;
+  data: Member;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -28,20 +28,19 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const { handleDelete } = useUserStore();
 
   const onConfirm = async () => {
-    setLoading(true);
-
-    try {
-      if (data.id) {
-        await handleDelete(data.id);
-        setOpen(false);
-      } else {
-        console.error("ID not found");
-      }
-    } catch (error: any) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    // setLoading(true);
+    // try {
+    //   if (data.id) {
+    //     await handleDelete(data.id);
+    //     setOpen(false);
+    //   } else {
+    //     console.error("ID not found");
+    //   }
+    // } catch (error: any) {
+    //   console.error(error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

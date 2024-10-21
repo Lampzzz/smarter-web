@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,8 +23,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createShelter } from "@/firebase/firestore";
 import { useToast } from "@/hooks/useToast";
+import useManagerStore from "@/store/managerStore";
+import { createShelter } from "@/firebase/firestore/shelter";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -48,9 +49,11 @@ const formSchema = z.object({
         message: "Capacity must be between 0 and 5.",
       }
     ),
+  managerId: z.string(),
 });
 
 export default function ShelterForm() {
+  const { unassignedManagers, fetchUnAssignedManager } = useManagerStore();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,19 +63,27 @@ export default function ShelterForm() {
       status: undefined,
       type: undefined,
       capacity: "0",
+      managerId: "none",
     },
   });
+
+  useEffect(() => {
+    fetchUnAssignedManager();
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await createShelter({
         ...values,
         capacity: Number(values.capacity),
+        managerId: values.managerId === "none" ? "" : values.managerId,
       });
 
       if (!response.success) {
         console.log("error");
       }
+
+      alert(JSON.stringify(values, null, 2));
 
       form.reset();
 
@@ -138,7 +149,7 @@ export default function ShelterForm() {
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a type" />
+                          <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -159,7 +170,7 @@ export default function ShelterForm() {
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a status" />
+                          <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -185,6 +196,31 @@ export default function ShelterForm() {
                       placeholder="Enter capacity (0-5)"
                       {...field}
                     />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="managerId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Manager</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select manager" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="none">None</SelectItem>
+                        {unassignedManagers?.map((shelter) => (
+                          <SelectItem key={shelter.id} value={shelter.id!}>
+                            {shelter?.fullName}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

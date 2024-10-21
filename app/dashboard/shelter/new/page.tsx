@@ -1,4 +1,4 @@
-import ShelterForm from "@/sections/shelter/form";
+import ShelterForm from "@/views/shelter/form";
 import { Breadcrumbs } from "@/components/Breadcrumb";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
