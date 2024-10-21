@@ -79,7 +79,7 @@ export default function UserForm() {
   });
 
   const processForm: SubmitHandler<UserFormValues> = (data) => {
-    setData(data);
+    setData(data as Resident);
   };
 
   type FieldName = keyof UserFormValues;
