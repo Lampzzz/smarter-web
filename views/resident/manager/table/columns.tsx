@@ -2,11 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import { Manager } from "@/types";
 
-export const columns: ColumnDef<User>[] = [
+export const columns: ColumnDef<Manager>[] = [
   {
     accessorKey: "fullName",
     header: ({ column }) => {
