@@ -7,8 +7,8 @@ import {
 } from "firebase/auth";
 
 import { auth } from "./config";
-import { newAdmin } from "./firestore";
 import { fireBaseError } from "@/lib/utils";
+import { createAdmin } from "./firestore/admin";
 
 export const login = async (email: string, password: string) => {
   try {
@@ -42,7 +42,7 @@ export const register = async ({
     );
 
     const user = userCredential.user;
-    await newAdmin({ name, email, authId: user.uid });
+    await createAdmin({ name, email, authId: user.uid });
     await login(email, password);
 
     return { success: true };
