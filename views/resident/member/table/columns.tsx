@@ -45,7 +45,7 @@ export const columns: ColumnDef<Member>[] = [
   },
   {
     accessorKey: "managerName",
-    header: "Manager Name",
+    header: "Manager",
   },
   {
     id: "actions",

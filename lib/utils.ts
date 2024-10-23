@@ -1,4 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
+import { format } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -42,3 +44,18 @@ export const formatBirthDate = (date: string): number => {
 
   return Math.floor(diffInMilliseconds / millisecondsInYear);
 };
+
+export function formatDate(
+  date: Timestamp | string | null | undefined,
+  dateFormat: string = "PPP"
+): string {
+  if (date instanceof Timestamp) {
+    return format(date.toDate(), dateFormat);
+  }
+
+  if (typeof date === "string") {
+    return date;
+  }
+
+  return "N/A";
+}

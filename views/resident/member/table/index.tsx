@@ -18,8 +18,6 @@ export default function MemberTable({ filters }: { filters: UserFilterTypes }) {
     fetchMembers(filters);
   }, [filters, fetchMembers]);
 
-  // console.log(members);
-
   const {
     genderFilter,
     setGenderFilter,

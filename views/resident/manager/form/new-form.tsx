@@ -39,12 +39,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { createResident } from "@/firebase/firestore";
 import { useToast } from "@/hooks/useToast";
 import { MemberOpenState, Resident } from "@/types";
+import { createResident } from "@/firebase/firestore/manager";
+import { useRouter } from "next/navigation";
 
 export default function UserForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [memberOpen, setMemberOpen] = useState<MemberOpenState>({});
   const [loading, setLoading] = useState(false);
@@ -147,6 +149,7 @@ export default function UserForm() {
         description: "User created successfully",
       });
 
+      router.replace("/dashboard/resident/manager");
       form.reset();
     } catch (error) {
       console.error(error);

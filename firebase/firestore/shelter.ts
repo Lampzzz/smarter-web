@@ -9,6 +9,7 @@ import {
   orderBy,
   query,
   setDoc,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -19,8 +20,6 @@ import { getManagerById } from "./manager";
 export const createShelter = async (data: Shelter) => {
   try {
     const ref = collection(db, "shelters");
-
-    console.log("Added data: ", data);
 
     await addDoc(ref, {
       ...data,
@@ -78,9 +77,19 @@ export const getShelterById = async (id: string) => {
 export const updateShelter = async (data: Shelter, id: string) => {
   try {
     const ref = doc(db, "shelters", id);
+    const existingDoc = await getDoc(ref);
+
+    if (!existingDoc.exists()) {
+      console.error("Shelter not found");
+      return;
+    }
+
+    const existingData = existingDoc.data();
 
     await setDoc(ref, {
       ...data,
+      name: data.name || existingData.name,
+      location: data.location || existingData.location,
       managerId: data.managerId === "none" ? null : data.managerId,
       updatedAt: Timestamp.now(),
     });

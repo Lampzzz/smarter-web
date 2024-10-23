@@ -3,16 +3,16 @@ import { create } from "zustand";
 import { ManagerState, UserFilterTypes } from "@/types";
 import {
   deleteManagerById,
+  getManagersByAssigned,
   getManagerById,
   getManagers,
-  getUnAssignedManager,
   updateManager,
 } from "@/firebase/firestore/manager";
 
 const useManagerStore = create<ManagerState>((set, get) => ({
   managers: [],
   manager: null,
-  unassignedManagers: [],
+  assignedManagers: [],
   totalData: 0,
   isLoading: false,
 
@@ -47,43 +47,43 @@ const useManagerStore = create<ManagerState>((set, get) => ({
     }
   },
 
-  async fetchUnAssignedManager() {
-    const data = await getUnAssignedManager();
-    set({ unassignedManagers: data });
+  async fetchAssignedManager(isAssigned: boolean) {
+    const data = await getManagersByAssigned(isAssigned);
+    set({ assignedManagers: data });
   },
 
-  // fetchManger: async (id: string) => {
-  //   try {
-  //     const data = await getManagerById(id);
+  fetchManager: async (id: string) => {
+    try {
+      const data = await getManagerById(id);
 
-  //     set({ manager: data });
-  //   } catch (error) {
-  //     console.error(error);
-  //     set({ manager: null });
-  //   }
-  // },
+      set({ manager: data });
+    } catch (error) {
+      console.error(error);
+      set({ manager: null });
+    }
+  },
 
-  // handleUpdate: async (data: any, id: string) => {
-  //   set({ isLoading: true });
+  handleUpdate: async (data: any, id: string) => {
+    set({ isLoading: true });
 
-  //   try {
-  //     await updateManager(data, id);
-  //     await get().fetchManger(id);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     set({ isLoading: false });
-  //   }
-  // },
+    try {
+      await updateManager(data, id);
+      await get().fetchManager(id);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      set({ isLoading: false });
+    }
+  },
 
-  // handleDelete: async (id: string) => {
-  //   try {
-  //     await deleteManagerById(id);
-  //     await get().fetchManagers();
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // },
+  handleDelete: async (id: string) => {
+    try {
+      await deleteManagerById(id);
+      await get().fetchManagers();
+    } catch (error) {
+      console.error(error);
+    }
+  },
 }));
 
 export default useManagerStore;

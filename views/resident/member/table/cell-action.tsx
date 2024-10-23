@@ -15,6 +15,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import useMemberStore from "@/store/memberStore";
 
 interface CellActionProps {
   data: Member;
@@ -24,23 +25,23 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
-  const { handleDelete } = useUserStore();
+  const { handleDelete } = useMemberStore();
 
   const onConfirm = async () => {
-    // setLoading(true);
-    // try {
-    //   if (data.id) {
-    //     await handleDelete(data.id);
-    //     setOpen(false);
-    //   } else {
-    //     console.error("ID not found");
-    //   }
-    // } catch (error: any) {
-    //   console.error(error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    setLoading(true);
+
+    try {
+      if (data.id) {
+        await handleDelete(data.id);
+        setOpen(false);
+      } else {
+        console.error("ID not found");
+      }
+    } catch (error: any) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,7 +63,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/tenant/${data.id}`)}
+            onClick={() => router.push(`/dashboard/resident/member/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

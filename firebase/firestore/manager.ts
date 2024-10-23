@@ -17,6 +17,8 @@ import { formatBirthDate } from "@/lib/utils";
 import { auth, db } from "../config";
 import { Manager, Resident } from "@/types";
 import { createMembers } from "./members";
+import { format } from "date-fns";
+import { getShelters } from "./shelter";
 
 export const createResident = async (data: Resident) => {
   try {
@@ -31,7 +33,9 @@ export const createResident = async (data: Resident) => {
     const managerDocRef = await addDoc(collection(db, "managers"), {
       ...managerData,
       auth_id: userCredential.user.uid,
+      dateOfBirth: format(data.dateOfBirth, "yyyy-MM-dd"),
       age: formatBirthDate(data.dateOfBirth),
+      isAssigned: false,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
     });
@@ -69,28 +73,44 @@ export const getManagerById = async (id: string) => {
     return {
       id: docSnap.id,
       ...docSnap.data(),
-    };
+    } as Manager;
   } catch (error) {
     console.error(error);
     return null;
   }
 };
 
-export const getUnAssignedManager = async () => {
+export const getManagersByAssigned = async (isAssigned: boolean) => {
   try {
+    const shelters = await getShelters();
     const managers = await getManagers();
-    const data = managers.filter((manager) => !manager.isAssigned);
 
-    return data;
+    const assignedManagerIds = shelters
+      .filter((shelter) => shelter.managerId !== null)
+      .map((shelter) => shelter.managerId);
+
+    const filteredManagers = managers.filter((manager) => {
+      const isManagerAssigned = assignedManagerIds.includes(manager.id!);
+      return isAssigned ? isManagerAssigned : !isManagerAssigned;
+    });
+
+    return filteredManagers;
   } catch (error) {
     console.error(error);
+    return [];
   }
 };
 
-export const updateManager = async (data: Resident, id: string) => {
+export const updateManager = async (data: Partial<Resident>, id: string) => {
   try {
     const ref = doc(db, "managers", id);
-    await setDoc(ref, data);
+    await setDoc(ref, {
+      ...data,
+      dateOfBirth: format(data.dateOfBirth, "yyyy-MM-dd"),
+      age: formatBirthDate(data.dateOfBirth),
+      updatedAt: Timestamp.now(),
+      isAssigned: data.isAssigned,
+    });
   } catch (error: any) {
     console.error(error);
   }
@@ -99,6 +119,18 @@ export const updateManager = async (data: Resident, id: string) => {
 export const deleteManagerById = async (id: string) => {
   try {
     await deleteDoc(doc(db, "managers", id));
+
+    const q = query(collection(db, "members"), where("managerId", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (docSnapshot) => {
+      const memberDocRef = doc(db, "members", docSnapshot.id);
+      await setDoc(
+        memberDocRef,
+        { managerId: null, updatedAt: Timestamp.now() },
+        { merge: true }
+      );
+    });
   } catch (error) {
     console.error(error);
   }

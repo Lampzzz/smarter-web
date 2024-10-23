@@ -49,11 +49,13 @@ const formSchema = z.object({
         message: "Capacity must be between 0 and 5.",
       }
     ),
-  managerId: z.string(),
+  managerId: z.string().min(1, {
+    message: "Required",
+  }),
 });
 
 export default function ShelterForm() {
-  const { unassignedManagers, fetchUnAssignedManager } = useManagerStore();
+  const { assignedManagers, fetchAssignedManager } = useManagerStore();
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,7 +70,7 @@ export default function ShelterForm() {
   });
 
   useEffect(() => {
-    fetchUnAssignedManager();
+    fetchAssignedManager(false);
   }, []);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -212,9 +214,9 @@ export default function ShelterForm() {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="none">None</SelectItem>
-                        {unassignedManagers?.map((shelter) => (
-                          <SelectItem key={shelter.id} value={shelter.id!}>
-                            {shelter?.fullName}
+                        {assignedManagers?.map((data) => (
+                          <SelectItem key={data.id} value={data.id!}>
+                            {data?.fullName}
                           </SelectItem>
                         ))}
                       </SelectContent>

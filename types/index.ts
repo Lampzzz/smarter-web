@@ -76,6 +76,7 @@ export interface Resident {
   address: string;
   password?: string;
   members: Member[];
+  isAssigned?: boolean;
 }
 
 export interface Member {
@@ -84,8 +85,10 @@ export interface Member {
   gender: string;
   dateOfBirth: any;
   age?: number;
-  managerId?: string;
-  managerName: string;
+  managerId?: string | null;
+  managerName?: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface MemberOpenState {
@@ -163,20 +166,24 @@ export interface ShelterState {
 
 export interface MemberState {
   members: Member[] | null;
+  member: Member | null;
   totalData: number;
   isLoading: boolean;
   fetchMembers: (filters?: UserFilterTypes) => Promise<void>;
+  fetchMember: (id: string) => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
+  handleUpdate: (data: Member, id: string) => Promise<void>;
 }
 
 export interface ManagerState {
   managers: Manager[] | null;
   manager: Manager | null;
-  unassignedManagers: Manager[] | null;
+  assignedManagers: Manager[] | null;
   totalData: number;
   isLoading: boolean;
   fetchManagers: (filters?: UserFilterTypes) => Promise<void>;
-  fetchUser?: (id: string) => Promise<void>;
-  fetchUnAssignedManager: () => Promise<void>;
-  handleDelete?: (id: string) => Promise<void>;
-  handleUpdate?: (data: Resident, id: string) => Promise<void>;
+  fetchManager: (id: string) => Promise<void>;
+  fetchAssignedManager: (isAssigned: boolean) => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
+  handleUpdate: (data: Manager, id: string) => Promise<void>;
 }

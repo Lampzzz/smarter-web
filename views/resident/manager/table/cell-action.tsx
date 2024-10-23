@@ -4,8 +4,6 @@ import { useState } from "react";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-import useUserStore from "@/store/managerStore";
-import { User } from "@/types";
 import { AlertModal } from "@/components/modal/alert-modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,17 +13,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Manager } from "@/types";
+import useManagerStore from "@/store/managerStore";
 
 interface CellActionProps {
-  data: User;
+  data: Manager;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const router = useRouter();
-
-  const { handleDelete } = useUserStore();
+  const { handleDelete } = useManagerStore();
 
   const onConfirm = async () => {
     setLoading(true);
@@ -63,7 +62,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/tenant/${data.id}`)}
+            onClick={() =>
+              router.push(`/dashboard/resident/manager/${data.id}`)
+            }
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

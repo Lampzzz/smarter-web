@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 const breadcrumbItems = [
   { title: "Dashboard", link: "/dashboard" },
-  { title: "Manager", link: "/dashboard/tenant" },
+  { title: "Shelter Manager", link: "/dashboard/resident/manager" },
 ];
 
 export default async function UsersListingPage() {
@@ -35,7 +35,7 @@ export default async function UsersListingPage() {
         <div className="flex items-start justify-between">
           <ManagerCount />
           <Link
-            href={"/dashboard/tenant/new"}
+            href={"/dashboard/resident/manager/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New

@@ -1,4 +1,4 @@
-import ShelterUpdateForm from "@/views/shelter/updateForm";
+import ShelterUpdateForm from "@/views/shelter/form/update-form";
 import { Breadcrumbs } from "@/components/Breadcrumb";
 import PageContainer from "@/components/layout/page-container";
 

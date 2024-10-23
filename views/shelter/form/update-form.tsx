@@ -24,44 +24,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import useManagerStore from "@/store/managerStore";
+import { useRouter } from "next/navigation";
 
 export default function ShelterUpdateForm({ id }: { id: string }) {
-  const { unassignedManagers, fetchUnAssignedManager } = useManagerStore();
+  const router = useRouter();
+  const { assignedManagers, fetchAssignedManager } = useManagerStore();
   const { shelter, fetchShelter, handleUpdate, isLoading } = useShelterStore();
   const { toast } = useToast();
   const form = useForm();
 
   useEffect(() => {
-    const fetchShelterData = async () => {
-      await fetchShelter(id);
+    const fetchData = async () => {
+      await Promise.all([fetchShelter(id), fetchAssignedManager(false)]);
     };
 
-    fetchShelterData();
-  }, [id, fetchShelter]);
+    fetchData();
+  }, [id, fetchShelter, fetchAssignedManager]);
 
   useEffect(() => {
-    if (shelter) {
-      form.reset(shelter);
-      // alert(JSON.stringify(shelter, null, 2));
-    }
-  }, [shelter, form]);
-
-  useEffect(() => {
-    fetchUnAssignedManager();
-  }, []);
+    form.reset({ ...shelter, managerId: "" }!);
+  }, [shelter, form, assignedManagers]);
 
   const onSubmit = async (data: any) => {
     try {
       await handleUpdate(data, id);
 
-      // alert(JSON.stringify(data, null, 2));
-
       toast({
         title: "Shelter updated",
         description: "Shelter updated successfully",
       });
-    } catch (error: any) {
-      throw new Error(error);
+
+      router.replace("/dashboard/shelter");
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -180,7 +175,7 @@ export default function ShelterUpdateForm({ id }: { id: string }) {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="none">None</SelectItem>
-                        {unassignedManagers?.map((shelter) => (
+                        {assignedManagers?.map((shelter) => (
                           <SelectItem key={shelter.id} value={shelter.id!}>
                             {shelter?.fullName}
                           </SelectItem>

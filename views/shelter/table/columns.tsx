@@ -9,6 +9,10 @@ import { Button } from "@/components/ui/button";
 
 export const columns: ColumnDef<Shelter>[] = [
   {
+    accessorKey: "managerName",
+    header: "Manager",
+  },
+  {
     accessorKey: "name",
     header: "Name",
   },
@@ -40,10 +44,7 @@ export const columns: ColumnDef<Shelter>[] = [
     accessorKey: "status",
     header: "Status",
   },
-  {
-    accessorKey: "managerName",
-    header: "Manager",
-  },
+
   {
     id: "actions",
     cell: ({ row }) => <CellAction data={row.original} />,

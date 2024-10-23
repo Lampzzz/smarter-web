@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 
-import useUserStore from "@/store/managerStore";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,33 +30,36 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import useManagerStore from "@/store/managerStore";
+import { cn } from "@/lib/utils";
 
-export default function UserUpdateForm({ id }: { id: string }) {
-  const { user, isLoading, fetchUser, handleUpdate } = useUserStore();
+export default function ManagerUpdateForm({ id }: { id: string }) {
+  const { manager, isLoading, fetchManager, handleUpdate } = useManagerStore();
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const form = useForm();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      await fetchUser(id);
+    const fetchData = async () => {
+      await fetchManager(id);
     };
 
-    fetchUserData();
-  }, [id, fetchUser]);
+    fetchData();
+  }, [id, fetchManager]);
 
   useEffect(() => {
-    if (user) {
-      form.reset(user);
+    if (manager) {
+      form.reset(manager);
     }
-  }, [user, form]);
+  }, [manager, form]);
 
   const onSubmit = async (data: any) => {
     try {
       await handleUpdate(data, id);
 
       toast({
-        title: "user updated",
-        description: "user updated successfully",
+        title: "Manager Updated",
+        description: "The manager's information has been successfully updated.",
       });
     } catch (error: any) {
       console.error(error);
@@ -68,7 +70,7 @@ export default function UserUpdateForm({ id }: { id: string }) {
     <Card className="mx-auto w-full">
       <CardHeader>
         <CardTitle className="text-left text-2xl font-bold">
-          User Information
+          Manager Information
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -77,7 +79,7 @@ export default function UserUpdateForm({ id }: { id: string }) {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="fullName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -90,58 +92,38 @@ export default function UserUpdateForm({ id }: { id: string }) {
               />
               <FormField
                 control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your last name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="middleName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Middle Name (optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter your middle name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="dateOfBirth"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col justify-end">
+                  <FormItem>
                     <FormLabel>Date of birth</FormLabel>
-                    <Popover>
+                    <Popover open={open} onOpenChange={setOpen}>
                       <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button variant={"outline"}>
-                            {field.value ? (
-                              format(field.value, "PPP")
-                            ) : (
-                              <span>Select birth date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "MMMM d, yyyy")
+                          ) : (
+                            <span>Select birth date</span>
+                          )}
+                        </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      <PopoverContent align="start" className=" w-auto p-0">
                         <Calendar
                           mode="single"
+                          captionLayout="dropdown-buttons"
                           selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date > new Date() || date < new Date("2000-01-01")
-                          }
-                          initialFocus
+                          onSelect={(data) => {
+                            field.onChange(data);
+                            setOpen(false);
+                          }}
+                          fromYear={1960}
+                          toYear={2030}
                         />
                       </PopoverContent>
                     </Popover>

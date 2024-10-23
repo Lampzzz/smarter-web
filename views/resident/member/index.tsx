@@ -35,7 +35,7 @@ export default async function UsersListingPage() {
         <div className="flex items-start justify-between">
           <TotalCount />
           <Link
-            href={"/dashboard/tenant/new"}
+            href={"/dashboard/resident/member/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New
