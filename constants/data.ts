@@ -3,45 +3,41 @@ import { NavItem } from "@/types";
 export const navItems: NavItem[] = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    url: "/dashboard/overview",
     icon: "dashboard",
-    label: "Dashboard",
+    isActive: false,
+    items: [],
   },
   {
     title: "Shelter",
-    href: "/dashboard/shelter",
+    url: "/dashboard/shelter",
     icon: "house",
-    label: "Shelter",
+    isActive: false,
+    items: [],
   },
   {
     title: "Resident",
+    url: "#",
     icon: "users",
-    label: "Resident",
-    children: [
+    isActive: true,
+    items: [
       {
         title: "Manager",
-        href: "/dashboard/resident/manager",
+        url: "/dashboard/manager",
         icon: "userCheck",
-        label: "Manager",
       },
       {
         title: "Member",
-        href: "/dashboard/resident/member",
+        url: "/dashboard/member",
         icon: "user",
-        label: "Member",
       },
     ],
   },
   {
     title: "Message",
-    href: "/dashboard/message",
+    url: "/dashboard/message",
     icon: "mail",
-    label: "Message",
-  },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: "settings",
-    label: "Settings",
+    isActive: false,
+    items: [],
   },
 ];

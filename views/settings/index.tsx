@@ -6,10 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import { User, Monitor, Bell, Wrench } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import Profile from "./tabs/profile";
-import Account from "./tabs/account";
 import Notifications from "./tabs/notification";
-import Appearance from "./tabs/appearance";
+import Appearance from "./appearance";
+import Profile from "./profile";
+import Account from "./account";
 
 const navigationItems = [
   {

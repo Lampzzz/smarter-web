@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/firebase/auth";
 import useAuthStore from "@/store/authStore";
+import Link from "next/link";
 
 export function UserNav() {
   const { currentUser } = useAuthStore();
@@ -51,12 +52,11 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-
-          <DropdownMenuItem>Settings</DropdownMenuItem>
+          <Link href="/dashboard/settings">
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,11 +1,15 @@
-import type { Metadata } from "next";
+"use client";
 
-import Overview from "@/views/overview";
+import useAuthStore from "@/store/authStore";
+import { useRouter } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Overview",
-};
+export default async function Dashboard() {
+  const { isAuthenticated } = useAuthStore();
+  const router = useRouter();
 
-export default function Dashboard() {
-  return <Overview />;
+  if (!isAuthenticated) {
+    return router.replace("/");
+  } else {
+    router.replace("/dashboard/overview");
+  }
 }

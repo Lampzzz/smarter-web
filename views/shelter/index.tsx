@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import PageContainer from "@/components/layout/page-container";
 import ShelterTable from "./table";
 import ShelterCount from "./table/count";
-import { Breadcrumbs } from "@/components/Breadcrumb";
 import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { searchParamsCache } from "@/lib/searchparams";
@@ -31,7 +30,6 @@ export default async function Shelter() {
   return (
     <PageContainer scrollable={true}>
       <div className="space-y-4">
-        <Breadcrumbs items={breadcrumbItems} />
         <div className="flex items-start justify-between">
           <ShelterCount />
           <Link

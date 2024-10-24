@@ -85,12 +85,21 @@ export const updateShelter = async (data: Shelter, id: string) => {
     }
 
     const existingData = existingDoc.data();
+    let managerId = null;
+
+    if (data.managerId === "none") {
+      managerId = null;
+    } else if (data.managerId === "") {
+      managerId = existingData.managerId;
+    } else {
+      managerId = data.managerId;
+    }
 
     await setDoc(ref, {
       ...data,
       name: data.name || existingData.name,
       location: data.location || existingData.location,
-      managerId: data.managerId === "none" ? null : data.managerId,
+      managerId: managerId,
       updatedAt: Timestamp.now(),
     });
   } catch (error: any) {
@@ -101,7 +110,10 @@ export const updateShelter = async (data: Shelter, id: string) => {
 export const deleteShelterById = async (id: string) => {
   try {
     await deleteDoc(doc(db, "shelters", id));
-  } catch (error) {
+
+    // return { success: true, message: "Shelter Deleted Successfully!" };
+  } catch (error: any) {
     console.error(error);
+    // return { success: false, message: error.message };
   }
 };

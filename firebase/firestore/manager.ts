@@ -41,8 +41,19 @@ export const createResident = async (data: Resident) => {
     });
 
     await createMembers(members, managerDocRef.id);
-  } catch (error) {
+
+    return { success: true, message: "Manager Created Successfully!" };
+  } catch (error: any) {
     console.error(error);
+    let errorMessage = "";
+
+    if (error.code === "auth/email-already-in-use") {
+      errorMessage = "Email already exist";
+    } else {
+      errorMessage = error.message;
+    }
+
+    return { success: false, message: errorMessage };
   }
 };
 

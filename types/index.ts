@@ -16,12 +16,15 @@ export type Gender = "male" | "female";
 export interface NavItem {
   title: string;
   href?: string;
+  url?: string;
   disabled?: boolean;
   external?: boolean;
   icon?: keyof typeof Icons;
   label?: string;
   description?: string;
   children?: NavItem[];
+  isActive?: boolean;
+  items?: NavItem[];
 }
 
 export interface FormData {

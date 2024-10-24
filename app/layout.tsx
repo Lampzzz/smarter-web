@@ -1,10 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-
-import ThemeProvider from "@/components/layout/theme/theme-provider";
-import AuthListenerProvider from "@/components/auth-provider";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
+import Providers from "@/components/layout/providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,18 +17,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} overflow-hidden`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+    <html lang="en" className={`${inter.className}`}>
+      <body className={`overflow-hidden`} suppressHydrationWarning={true}>
+        <Providers>
+          <Toaster />
           {children}
-        </ThemeProvider>
-        <Toaster />
-        <AuthListenerProvider />
+        </Providers>
       </body>
     </html>
   );

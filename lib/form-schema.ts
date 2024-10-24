@@ -2,25 +2,26 @@ import * as z from "zod";
 
 export const userSchema = z.object({
   fullName: z.string().min(1, {
-    message: "Required.",
+    message: "Required",
   }),
   address: z.string().min(1, {
-    message: "Required.",
+    message: "Required",
   }),
   email: z.string().min(1, {
-    message: "Required.",
+    message: "Required",
   }),
   phoneNumber: z.string().min(1, {
-    message: "Required.",
+    message: "Required",
   }),
   dateOfBirth: z.date({
-    required_error: "Required.",
+    required_error: "Required",
   }),
   gender: z.string().min(1, {
-    message: "Required.",
+    message: "Required",
   }),
   password: z
     .string()
+    .min(1, { message: "Required" })
     .min(8, { message: "Password must be at least 8 characters long." })
     .max(20, { message: "Password cannot exceed 20 characters." })
     .refine((val) => /[a-z]/.test(val), {
@@ -38,13 +39,13 @@ export const userSchema = z.object({
   members: z.array(
     z.object({
       fullName: z.string().min(1, {
-        message: "Required.",
+        message: "Required",
       }),
       dateOfBirth: z.date({
-        required_error: "Required.",
+        required_error: "Required",
       }),
       gender: z.string().min(1, {
-        message: "Required.",
+        message: "Required",
       }),
     })
   ),

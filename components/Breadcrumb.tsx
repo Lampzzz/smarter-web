@@ -6,15 +6,14 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useBreadcrumbs } from "@/hooks/use-breadcrumbs";
 import { Slash } from "lucide-react";
 import { Fragment } from "react";
 
-type BreadcrumbItemProps = {
-  title: string;
-  link: string;
-};
+export function Breadcrumbs() {
+  const items = useBreadcrumbs();
+  if (items.length === 0) return null;
 
-export function Breadcrumbs({ items }: { items: BreadcrumbItemProps[] }) {
   return (
     <Breadcrumb>
       <BreadcrumbList>

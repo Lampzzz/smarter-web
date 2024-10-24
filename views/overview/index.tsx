@@ -1,9 +1,9 @@
 import PageContainer from "@/components/layout/page-container";
-import TotalData from "./total-data";
-import { RecentTenant } from "./recent-tenant";
-import { PieGraph } from "./pie-graph";
-import { AreaGraph } from "./area-graph";
-import { BarGraph } from "./bar-graph";
+import TotalData from "./_components/total-data";
+import { RecentTenant } from "./_components/recent-tenant";
+import { PieGraph } from "./_components/pie-graph";
+import { AreaGraph } from "./_components/area-graph";
+import { BarGraph } from "./_components/bar-graph";
 import {
   Card,
   CardContent,
