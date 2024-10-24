@@ -1,10 +1,17 @@
-import type { Metadata } from "next";
+import { SearchParams } from "nuqs/parsers";
+import { searchParamsCache } from "@/lib/searchparams";
 import MessagePage from "./_components/messagePage";
 
-export const metadata: Metadata = {
-  title: "Dashboard: Message",
+type PageProps = {
+  searchParams: SearchParams;
 };
 
-export default function Page() {
+export const metadata = {
+  title: "Dashboard: Announcement",
+};
+
+export default function Shelter({ searchParams }: PageProps) {
+  searchParamsCache.parse(searchParams);
+
   return <MessagePage />;
 }

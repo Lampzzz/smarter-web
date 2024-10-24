@@ -53,6 +53,18 @@ export interface Shelter {
   managerName?: string | null;
 }
 
+export interface Announcement {
+  id?: string;
+  title: string;
+  description: string;
+  senderId: string;
+  recipient: string;
+  image?: string;
+  createdAt?: string;
+  senderName?: string;
+  category: string;
+}
+
 export interface Manager {
   id?: string;
   fullName: string;

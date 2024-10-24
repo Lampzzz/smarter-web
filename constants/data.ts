@@ -34,7 +34,7 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    title: "Message",
+    title: "Announcement",
     url: "/dashboard/message",
     icon: "mail",
     isActive: false,
